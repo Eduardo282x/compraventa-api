@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { EmpresaService } from './empresa.service';
 import { DtoBaseResponse } from 'src/dto/base.dto';
 import { DtoEmpresa, DtoUpdateEmpresa } from 'src/dto/empresa.dto';
@@ -14,11 +14,11 @@ export class EmpresaController {
         return await this.empresaServices.getEmpresas();
     }
     @Post()
-    async createEmpresa(empresa: DtoEmpresa): Promise<DtoBaseResponse> {
+    async createEmpresa(@Body() empresa: DtoEmpresa): Promise<DtoBaseResponse> {
         return await this.empresaServices.createEmpresa(empresa);
     }
     @Put()
-    async updateEmpresa(empresa: DtoUpdateEmpresa): Promise<DtoBaseResponse> {
+    async updateEmpresa(@Body() empresa: DtoUpdateEmpresa): Promise<DtoBaseResponse> {
         return await this.empresaServices.updateEmpresa(empresa);
     }
     @Delete()
