@@ -14,4 +14,8 @@ export class UsuariosService {
             }
         });
     }
+
+    async createUsers() {
+        
+    }
 }
