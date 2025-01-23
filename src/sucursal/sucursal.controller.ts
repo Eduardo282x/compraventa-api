@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { SucursalService } from './sucursal.service';
 import { DtoBaseResponse } from 'src/dto/base.dto';
 import { DtoSucursal, DtoUpdateSucursal } from 'src/dto/sucursal.dto';
@@ -22,8 +22,8 @@ export class SucursalController {
     async updateSucursal(@Body() sucursal: DtoUpdateSucursal): Promise<DtoBaseResponse> {
         return await this.sucursalesService.updateSucursal(sucursal);
     }
-    @Delete()
-    async deleteSucursal(id: number): Promise<DtoBaseResponse> {
-        return await this.sucursalesService.deleteSucursal(id);
+    @Delete('/:id')
+    async deleteSucursal(@Param('id') id: string): Promise<DtoBaseResponse> {
+        return await this.sucursalesService.deleteSucursal(Number(id));
     }
 }

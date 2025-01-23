@@ -39,6 +39,7 @@ model VentaDetalle {
 model Categoria {
   catId    Int        @id @default(autoincrement())
   sucId    Int
+  sucursal Sucursal   @relation(fields: [sucId], references: [sucId])
   nombre   String
   // Relaciones
   Producto Producto[]
@@ -138,28 +139,28 @@ model Usuario {
 }
 
 model Producto {
-  prodId       Int      @id @default(autoincrement())
-  catId        Int
-  prodNom      String
-  prodDescrip  String?  @db.LongText
-  prodPcompra  Decimal  @db.Decimal(18, 2)
-  prodPventa   Decimal  @db.Decimal(18, 2)
-  prodStock    Int      @default(0)
-  prodFechaven DateTime
-  prodImg      String?  @db.LongText
-  fechCrea     DateTime @default(now())
-  status       Boolean  @default(true)
+  prodId        Int      @id @default(autoincrement())
+  catId         Int
+  prodNom       String
+  prodDescrip   String?  @db.LongText
+  prodPcompra   Decimal  @db.Decimal(18, 2)
+  prodPventa    Decimal  @db.Decimal(18, 2)
+  prodStock     Int      @default(0)
+  prodFechaven  DateTime
+  prodImg       String?  @db.LongText
+  fechCrea      DateTime @default(now())
+  status        Boolean  @default(true)
+  MonedaMonId   Int?
+  SucursalSucId Int?
+  UnidadUndId   Int?
 
   // Relaciones
-  Categoria     Categoria       @relation(fields: [catId], references: [catId])
   CompraDetalle CompraDetalle[]
   VentaDetalle  VentaDetalle[]
+  Categoria     Categoria       @relation(fields: [catId], references: [catId])
   Moneda        Moneda?         @relation(fields: [MonedaMonId], references: [monId])
-  MonedaMonId   Int?
   Sucursal      Sucursal?       @relation(fields: [SucursalSucId], references: [sucId])
-  SucursalSucId Int?
   Unidad        Unidad?         @relation(fields: [UnidadUndId], references: [undId])
-  UnidadUndId   Int?
 }
 
 model Venta {
@@ -201,9 +202,10 @@ model Sucursal {
   status   Boolean  @default(true)
 
   // Relaciones
-  Empresa  Empresa    @relation(fields: [empId], references: [empId])
-  Producto Producto[]
-  Usuario  Usuario[]
+  Empresa   Empresa     @relation(fields: [empId], references: [empId])
+  Producto  Producto[]
+  Usuario   Usuario[]
+  Categoria Categoria[]
 }
 
 model Moneda {

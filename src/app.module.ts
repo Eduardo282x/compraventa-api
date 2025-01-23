@@ -12,9 +12,10 @@ import { ProveedoresModule } from './proveedores/proveedores.module';
 import { PrismaService } from './prisma/prisma.service';
 import { MainloadModule } from './mainload/mainload.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [ProductoModule, VentaModule, PagoModule, SucursalModule, EmpresaModule, UsuariosModule, ClientesModule, ProveedoresModule, MainloadModule, AuthModule],
+  imports: [ProductoModule, VentaModule, PagoModule, SucursalModule, EmpresaModule, UsuariosModule, ClientesModule, ProveedoresModule, MainloadModule, AuthModule, CategoryModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

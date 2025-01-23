@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
 import { DtoBaseResponse } from 'src/dto/base.dto';
 import { DtoClientes, DtoUpdateCliente } from 'src/dto/clients.dto';
@@ -21,8 +21,8 @@ export class ClientesController {
     async updateCliente(@Body() cliente: DtoUpdateCliente): Promise<DtoBaseResponse> {
         return await this.clienteService.updateCliente(cliente);
     }
-    @Delete()
-    async deleteCliente(id: number): Promise<DtoBaseResponse> {
-        return await this.clienteService.deleteCliente(id);
+    @Delete(':/id')
+    async deleteCliente(@Param('id') id: string): Promise<DtoBaseResponse> {
+        return await this.clienteService.deleteCliente(Number(id));
     }
 }

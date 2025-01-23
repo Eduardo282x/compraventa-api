@@ -3,7 +3,7 @@ import { DtoBaseResponse } from "./base.dto";
 
 export class DtoLogin {
     @IsString()
-    username: string;
+    email: string;
     @IsString()
     password: string;
 }

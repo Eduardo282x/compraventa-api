@@ -16,7 +16,7 @@ export class AuthService {
     async auth(user: DtoLogin): Promise<DtoBaseResponse | ResponseLogin>{
         const findUser = await this.prismaService.usuario.findFirst({
             where: {
-                usuCorreo: user.username,
+                usuCorreo: user.email,
                 usuPassword: user.password
             },
             include: {
