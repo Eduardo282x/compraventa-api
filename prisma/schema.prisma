@@ -22,27 +22,38 @@ model CompraDetalle {
   Producto Producto @relation(fields: [prodId], references: [prodId])
 }
 
-model VentaDetalle {
-  detvId     Int     @id @default(autoincrement())
-  ventId     Int
-  prodId     Int
-  prodPventa Decimal @db.Decimal(18, 2)
-  detvCant   Int
-  detvTotal  Decimal @db.Decimal(18, 2)
-  status     Boolean @default(true)
-
-  // Relaciones
-  Venta    Venta    @relation(fields: [ventId], references: [ventId])
-  Producto Producto @relation(fields: [prodId], references: [prodId])
-}
-
 model Categoria {
   catId    Int        @id @default(autoincrement())
   sucId    Int
   sucursal Sucursal   @relation(fields: [sucId], references: [sucId])
   nombre   String
-  // Relaciones
   Producto Producto[]
+}
+
+model Producto {
+  prodId        Int      @id @default(autoincrement())
+  catId         Int
+  prodNom       String
+  prodDescrip   String?  @db.LongText
+  prodPcompra   Decimal  @db.Decimal(18, 2)
+  prodPventa    Decimal  @db.Decimal(18, 2)
+  prodStock     Int      @default(0)
+  prodFechaven  DateTime
+  prodImg       String?  @db.LongText
+  fechCrea      DateTime @default(now())
+  status        Boolean  @default(true)
+  MonedaMonId   Int?
+  SucursalSucId Int?
+  UnidadUndId   Int?
+
+  // Relaciones
+  CompraDetalle CompraDetalle[]
+  VentaDetalle  VentaDetalle[]
+  Categoria     Categoria       @relation(fields: [catId], references: [catId])
+  Moneda        Moneda?         @relation(fields: [MonedaMonId], references: [monId])
+  Sucursal      Sucursal?       @relation(fields: [SucursalSucId], references: [sucId])
+  Unidad        Unidad?         @relation(fields: [UnidadUndId], references: [undId])
+  Carrito       Carrito[]
 }
 
 model Cliente {
@@ -57,7 +68,9 @@ model Cliente {
   status       Boolean  @default(true)
 
   // Relaciones
-  Venta Venta[]
+  Venta   Venta[]
+  Carrito Carrito[]
+  Pedidos Pedidos[]
 }
 
 model Compra {
@@ -138,29 +151,17 @@ model Usuario {
   Rol      Rol      @relation(fields: [rolId], references: [id])
 }
 
-model Producto {
-  prodId        Int      @id @default(autoincrement())
-  catId         Int
-  prodNom       String
-  prodDescrip   String?  @db.LongText
-  prodPcompra   Decimal  @db.Decimal(18, 2)
-  prodPventa    Decimal  @db.Decimal(18, 2)
-  prodStock     Int      @default(0)
-  prodFechaven  DateTime
-  prodImg       String?  @db.LongText
-  fechCrea      DateTime @default(now())
-  status        Boolean  @default(true)
-  MonedaMonId   Int?
-  SucursalSucId Int?
-  UnidadUndId   Int?
+model VentaDetalle {
+  detvId     Int     @id @default(autoincrement())
+  ventId     Int
+  prodId     Int
+  prodPventa Decimal @db.Decimal(18, 2)
+  detvCant   Int
+  detvTotal  Decimal @db.Decimal(18, 2)
 
   // Relaciones
-  CompraDetalle CompraDetalle[]
-  VentaDetalle  VentaDetalle[]
-  Categoria     Categoria       @relation(fields: [catId], references: [catId])
-  Moneda        Moneda?         @relation(fields: [MonedaMonId], references: [monId])
-  Sucursal      Sucursal?       @relation(fields: [SucursalSucId], references: [sucId])
-  Unidad        Unidad?         @relation(fields: [UnidadUndId], references: [undId])
+  Venta    Venta    @relation(fields: [ventId], references: [ventId])
+  Producto Producto @relation(fields: [prodId], references: [prodId])
 }
 
 model Venta {
@@ -170,7 +171,6 @@ model Venta {
   ventIgv      Decimal  @default(0.00) @db.Decimal(18, 2)
   ventTotal    Decimal  @default(0.00) @db.Decimal(18, 2)
   fechCrea     DateTime @default(now())
-  status       Boolean  @default(true)
 
   // Relaciones
   Cliente        Cliente        @relation(fields: [cliId], references: [cliId])
@@ -183,9 +183,33 @@ model Venta {
   PagoPagId      Int?
 }
 
+model Pedidos {
+  id      Int      @id @default(autoincrement())
+  cliId   Int
+  pending Boolean
+  
+  fecha   DateTime @default(now())
+  cliente Cliente  @relation(fields: [cliId], references: [cliId])
+}
+
+model Carrito {
+  id     Int @id @default(autoincrement())
+  prodId Int
+  cant   Int
+  cliId  Int
+
+  cliente  Cliente  @relation(fields: [cliId], references: [cliId])
+  producto Producto @relation(fields: [prodId], references: [prodId])
+}
+
 model Pago {
   pagId    Int      @id @default(autoincrement())
-  pagNom   String
+  bank     String
+  identify String
+  email    String
+  phone    String
+  owner    String
+  type     String
   fechCrea DateTime @default(now())
   status   Boolean  @default(true)
 

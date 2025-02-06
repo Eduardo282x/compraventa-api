@@ -22,7 +22,7 @@ export class CategoryController {
     async updateCategory(@Body() category: DtoUpdarteCategorias): Promise<DtoBaseResponse> {
         return await this.categoryService.updateCategory(category);
     }
-    @Delete(':/id')
+    @Delete('/:id')
     async deleteCategory(@Param('id') id: string): Promise<DtoBaseResponse> {
         return await this.categoryService.deleteCategory(Number(id));
     }

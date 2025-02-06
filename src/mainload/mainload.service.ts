@@ -63,24 +63,46 @@ export class MainloadService {
         await this.prismaService.proveedor.createMany({ data: proveedores });
 
         // 6. Categoría
-        const categorias = Array.from({ length: 10 }, (_, i) => ({
-            sucId: (i % 5) + 1, // Relaciona las categorías con las primeras 5 sucursales
-            nombre: `Categoría ${i + 1}`,
-        }));
-        await this.prismaService.categoria.createMany({ data: categorias });
+        await this.prismaService.categoria.createMany({
+            data: [
+                { sucId: 1, nombre: "Analgésicos" },
+                { sucId: 1, nombre: "Antibióticos" },
+                { sucId: 1, nombre: "Vacunas" },
+                { sucId: 1, nombre: "Antihipertensivos" },
+                { sucId: 1, nombre: "Antidiabéticos" },
+                { sucId: 1, nombre: "Antiinflamatorios" },
+                { sucId: 1, nombre: "Antihistamínicos" }
+            ]
+        });
 
         // 7. Producto
-        const productos = Array.from({ length: 10 }, (_, i) => ({
-            catId: (i % 5) + 1, // Relaciona los productos con las primeras 5 categorías
-            prodNom: `Producto ${i + 1}`,
-            prodDescrip: `Descripción del producto ${i + 1}`,
-            prodPcompra: 10 + i * 5,
-            prodPventa: 15 + i * 5,
-            prodStock: 100 - i * 5,
-            prodFechaven: new Date(2025, 11, i + 1), // Fecha de vencimiento simulada
-            status: true,
-        }));
-        await this.prismaService.producto.createMany({ data: productos });
+        // const productos = Array.from({ length: 10 }, (_, i) => ({
+        //     catId: 1,
+        //     prodNom: `Producto ${i + 1}`,
+        //     prodDescrip: `Descripción del producto ${i + 1}`,
+        //     prodPcompra: 10 + i * 5,
+        //     prodPventa: 15 + i * 5,
+        //     prodStock: 100 - i * 5,
+        //     prodImg: '',
+        //     prodFechaven: new Date(2025, 11, i + 1),
+        //     status: true,
+        // }));
+        await this.prismaService.producto.createMany({
+            data: [
+                { catId: 3, prodNom: "Vaxigrip", prodDescrip: "Vacuna contra la influenza.", prodPcompra: 50, prodPventa: 70, prodStock: 90, prodImg: "https://example.com/vaxigrip.jpg", prodFechaven: new Date("2025-12-11"), status: true },
+                { catId: 5, prodNom: "Implanon", prodDescrip: "Implante anticonceptivo subdérmico.", prodPcompra: 150, prodPventa: 200, prodStock: 85, prodImg: "https://example.com/implanon.jpg", prodFechaven: new Date("2025-12-12"), status: true },
+                { catId: 3, prodNom: "Typhim Vi", prodDescrip: "Vacuna contra la fiebre tifoidea.", prodPcompra: 60, prodPventa: 80, prodStock: 75, prodImg: "https://example.com/typhim-vi.jp", prodFechaven: new Date("2025-12-1",), status: true },
+                { catId: 2, prodNom: "Docetaxel", prodDescrip: "Quimioterapéutico utilizado en el tratamiento del cáncer.", prodPcompra: 500, prodPventa: 700, prodStock: 50, prodImg: "https://example.com/docetaxel.jpg", prodFechaven: new Date("2025-12-14"), status: true },
+                { catId: 3, prodNom: "Stamaril", prodDescrip: "Vacuna contra la fiebre amarilla.", prodPcompra: 55, prodPventa: 75, prodStock: 65, prodImg: "https://example.com/stamaril.jpg", prodFechaven: new Date("2025-12-15"), status: true },
+                { catId: 5, prodNom: "Saxenda", prodDescrip: "Medicamento para el control del peso.", prodPcompra: 400, prodPventa: 500, prodStock: 45, prodImg: "https://example.com/saxenda.jpg", prodFechaven: new Date("2025-12-16"), status: true },
+                { catId: 3, prodNom: "Hexaxim", prodDescrip: "Vacuna hexavalente para protección infantil.", prodPcompra: 90, prodPventa: 120, prodStock: 80, prodImg: "https://example.com/hexaxim.jpg", prodFechaven: new Date("2025-12-17"), status: true },
+                { catId: 2, prodNom: "Timoglobulina", prodDescrip: "Inmunosupresor para trasplantes de órganos.", prodPcompra: 600, prodPventa: 800, prodStock: 30, prodImg: "https://example.com/timoglobulina.jpg", prodFechaven: new Date("2025-12-18"), status: true },
+                { catId: 5, prodNom: "Levonogestrel", prodDescrip: "Anticonceptivo de emergencia.", prodPcompra: 20, prodPventa: 30, prodStock: 100, prodImg: "https://example.com/levonogestrel.jpg", prodFechaven: new Date("2025-12-19"), status: true },
+                { catId: 3, prodNom: "Menactra", prodDescrip: "Vacuna contra la meningitis meningocócica.", prodPcompra: 80, prodPventa: 100, prodStock: 70, prodImg: "https://example.com/menactra.jpg", prodFechaven: new Date("2025-12-20"), status: true },
+                { catId: 2, prodNom: "Cromus", prodDescrip: "Tratamiento para enfermedades inflamatorias crónicas.", prodPcompra: 120, prodPventa: 160, prodStock: 60, prodImg: "https://example.com/cromus.jpg", prodFechaven: new Date("2025-12-21"), status: true }
+
+            ]
+        });
 
         // 8. Rol
         const roles = [
