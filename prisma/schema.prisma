@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -34,12 +34,12 @@ model Producto {
   prodId        Int      @id @default(autoincrement())
   catId         Int
   prodNom       String
-  prodDescrip   String?  @db.LongText
+  prodDescrip   String?  
   prodPcompra   Decimal  @db.Decimal(18, 2)
   prodPventa    Decimal  @db.Decimal(18, 2)
   prodStock     Int      @default(0)
   prodFechaven  DateTime
-  prodImg       String?  @db.LongText
+  prodImg       String?  
   fechCrea      DateTime @default(now())
   status        Boolean  @default(true)
   MonedaMonId   Int?

@@ -20,6 +20,44 @@ export class ProductoService {
         });
     }
 
+    async getFilteredProducts(category: string, product: string) {
+        const findCategory = await this.prismaService.categoria.findFirst({
+            where: {
+                nombre: category
+            }
+        })
+
+        if(findCategory) {
+            return await this.prismaService.producto.findMany({
+                include: {
+                    Moneda: true,
+                    Sucursal: true,
+                    Unidad: true,
+                    Categoria: true
+                },
+                where: {
+                    catId: findCategory.catId
+                }
+            });
+        } else {
+            return await this.prismaService.producto.findMany({
+                include: {
+                    Moneda: true,
+                    Sucursal: true,
+                    Unidad: true,
+                    Categoria: true
+                },
+                where: {
+                    prodNom: {
+                        contains: product,
+                        mode: 'insensitive',    
+                    }
+                }
+            });
+        }
+        
+    }
+
     async getMonedas() {
         return await this.prismaService.moneda.findMany();
     }
