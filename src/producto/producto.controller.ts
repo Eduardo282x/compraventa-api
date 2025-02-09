@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProductoService } from './producto.service';
 import { CreateProductoDto, UpdateProductoDto } from 'src/dto/producto.dto';
 import { DtoBaseResponse } from 'src/dto/base.dto';
@@ -13,6 +13,11 @@ export class ProductoController {
     @Get()
     async getProducts() {
         return await this.productoServices.getProducts();
+    }
+    
+    @Get('/filter')
+    async getFilteredProducts(@Query('categoria') category: string, @Query('producto') product: string) {
+        return await this.productoServices.getFilteredProducts(category, product);
     }
 
     @Get('/moneda')
