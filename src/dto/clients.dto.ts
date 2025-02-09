@@ -1,8 +1,6 @@
 import { IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class DtoClientes {
-    @IsNumber()
-    empId: number;
     @IsString()
     cliNombre: string;
     @IsString()
@@ -13,8 +11,10 @@ export class DtoClientes {
     cliDireccion: string;
     @IsString()
     cliCorreo: string;
-    @IsBoolean()
-    status: boolean;
+    @IsString()
+    cliApellido: string;
+    @IsString()
+    cliPassword: string;
 }
 
 export class DtoUpdateCliente extends DtoClientes { 
