@@ -104,16 +104,17 @@ export class MainloadService {
         await this.prismaService.rol.createMany({ data: roles });
 
         // 9. Usuario
-        const usuarios = Array.from({ length: 10 }, (_, i) => ({
-            sucId: (i % 5) + 1, // Relaciona los usuarios con las primeras 5 sucursales
-            rolId: (i % 3) + 1, // Relaciona los usuarios con los primeros 3 roles
-            usuNombre: `Usuario ${i + 1}`,
-            usuApellido: `Apellido ${i + 1}`,
-            usuCorreo: `usuario${i + 1}@correo.com`,
-            usuPassword: `password${i + 1}`,
-            status: true,
-        }));
-        await this.prismaService.usuario.createMany({ data: usuarios });
+        await this.prismaService.usuario.create({
+            data: {
+                sucId: 1,
+                rolId: 1,
+                usuNombre: 'Admin',
+                usuApellido: 'Admin',
+                usuCorreo: 'admin@gmail.com',
+                usuPassword: 'admin',
+                status: true,
+            }
+        });
 
         // 10. Cliente
         const clientes = Array.from({ length: 10 }, (_, i) => ({
