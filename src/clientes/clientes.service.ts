@@ -16,13 +16,13 @@ export class ClientesService {
         try {
             await this.prismaService.cliente.create({
                 data: {
-                    empId: cliente.empId,
                     cliNombre: cliente.cliNombre,
+                    cliApellido: cliente.cliApellido,
                     cliRif: cliente.cliRif,
                     cliTelefono: cliente.cliTelefono,
                     cliDireccion: cliente.cliDireccion,
                     cliCorreo: cliente.cliCorreo,
-                    status: cliente.status
+                    cliPassword: cliente.cliPassword,
                 }
             })
 
@@ -37,13 +37,11 @@ export class ClientesService {
         try {
             await this.prismaService.cliente.update({
                 data: {
-                    empId: cliente.empId,
                     cliNombre: cliente.cliNombre,
                     cliRif: cliente.cliRif,
                     cliTelefono: cliente.cliTelefono,
                     cliDireccion: cliente.cliDireccion,
                     cliCorreo: cliente.cliCorreo,
-                    status: cliente.status
                 },
                 where: {
                     cliId: cliente.id

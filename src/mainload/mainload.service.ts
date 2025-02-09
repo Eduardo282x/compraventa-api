@@ -76,17 +76,6 @@ export class MainloadService {
         });
 
         // 7. Producto
-        // const productos = Array.from({ length: 10 }, (_, i) => ({
-        //     catId: 1,
-        //     prodNom: `Producto ${i + 1}`,
-        //     prodDescrip: `Descripción del producto ${i + 1}`,
-        //     prodPcompra: 10 + i * 5,
-        //     prodPventa: 15 + i * 5,
-        //     prodStock: 100 - i * 5,
-        //     prodImg: '',
-        //     prodFechaven: new Date(2025, 11, i + 1),
-        //     status: true,
-        // }));
         await this.prismaService.producto.createMany({
             data: [
                 { catId: 3, prodNom: "Vaxigrip", prodDescrip: "Vacuna contra la influenza.", prodPcompra: 50, prodPventa: 70, prodStock: 90, prodImg: "https://example.com/vaxigrip.jpg", prodFechaven: new Date("2025-12-11"), status: true },
@@ -128,13 +117,13 @@ export class MainloadService {
 
         // 10. Cliente
         const clientes = Array.from({ length: 10 }, (_, i) => ({
-            empId: (i % 5) + 1, // Relaciona los clientes con las primeras 5 empresas
             cliNombre: `Cliente ${i + 1}`,
+            cliApellido: `Cliente Apellido ${i + 1}`,
             cliRif: `${12345678 + i}`,
             cliTelefono: `0412${2345678 + i}`,
             cliDireccion: `Calle ${i + 1}`,
             cliCorreo: `cliente${i + 1}@correo.com`,
-            status: true,
+            cliPassword: `1234`,
         }));
         await this.prismaService.cliente.createMany({ data: clientes });
 

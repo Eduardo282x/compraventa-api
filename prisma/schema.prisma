@@ -57,15 +57,14 @@ model Producto {
 }
 
 model Cliente {
-  cliId        Int      @id @default(autoincrement())
-  empId        Int
+  cliId        Int    @id @default(autoincrement())
   cliNombre    String
+  cliApellido  String
   cliRif       String
   cliTelefono  String
   cliDireccion String
   cliCorreo    String
-  fechCrea     DateTime @default(now())
-  status       Boolean  @default(true)
+  cliPassword  String
 
   // Relaciones
   Venta   Venta[]
@@ -184,10 +183,10 @@ model Venta {
 }
 
 model Pedidos {
-  id      Int      @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   cliId   Int
   pending Boolean
-  
+
   fecha   DateTime @default(now())
   cliente Cliente  @relation(fields: [cliId], references: [cliId])
 }
