@@ -29,7 +29,7 @@ export class ClientesService {
             baseResponse.message = 'Cliente creada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
@@ -51,7 +51,7 @@ export class ClientesService {
             baseResponse.message = 'Cliente actualizada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }

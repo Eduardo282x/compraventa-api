@@ -95,7 +95,7 @@ export class ProductoService {
             baseResponse.message = 'Producto creada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
@@ -131,7 +131,7 @@ export class ProductoService {
             baseResponse.message = 'Producto actualizada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }

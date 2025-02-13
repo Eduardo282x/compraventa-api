@@ -30,7 +30,7 @@ export class SucursalService {
             baseResponse.message = 'Sucursal creada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
@@ -50,7 +50,7 @@ export class SucursalService {
             baseResponse.message = 'Sucursal actualizada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }

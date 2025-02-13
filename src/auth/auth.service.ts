@@ -19,7 +19,7 @@ export class AuthService {
         })
 
         if (!findClient) {
-            badResponse.message += 'Correo o contraseña incorrectos.'
+            badResponse.message = 'Correo o contraseña incorrectos.'
             return badResponse;
         }
 
@@ -57,7 +57,6 @@ export class AuthService {
     }
 
     async auth(user: DtoLogin): Promise<DtoBaseResponse | ResponseLogin> {
-
         if (user.sucursalId !== '0' && user.empresaId !== '0') {
             const findUser = await this.prismaService.usuario.findFirst({
                 where: {
@@ -70,7 +69,7 @@ export class AuthService {
             })
 
             if (!findUser) {
-                badResponse.message += 'Correo o contraseña incorrectos.'
+                badResponse.message = 'Correo o contraseña incorrectos.'
                 return badResponse;
             }
 
@@ -100,7 +99,7 @@ export class AuthService {
         })
 
         if (!findUser) {
-            badResponse.message += 'Correo o contraseña incorrectos.'
+            badResponse.message = 'Correo o contraseña incorrectos.'
             return badResponse;
         }
 

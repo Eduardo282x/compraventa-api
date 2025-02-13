@@ -30,7 +30,7 @@ export class ProveedoresService {
             baseResponse.message = 'Proveedor creado.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
@@ -54,7 +54,7 @@ export class ProveedoresService {
             baseResponse.message = 'Proveedor actualizada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }

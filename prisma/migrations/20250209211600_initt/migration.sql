@@ -44,14 +44,13 @@ CREATE TABLE "Producto" (
 -- CreateTable
 CREATE TABLE "Cliente" (
     "cliId" SERIAL NOT NULL,
-    "empId" INTEGER NOT NULL,
     "cliNombre" TEXT NOT NULL,
+    "cliApellido" TEXT NOT NULL,
     "cliRif" TEXT NOT NULL,
     "cliTelefono" TEXT NOT NULL,
     "cliDireccion" TEXT NOT NULL,
     "cliCorreo" TEXT NOT NULL,
-    "fechCrea" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "status" BOOLEAN NOT NULL DEFAULT true,
+    "cliPassword" TEXT NOT NULL,
 
     CONSTRAINT "Cliente_pkey" PRIMARY KEY ("cliId")
 );

@@ -11,7 +11,7 @@ export class MainloadService {
         // 1. Moneda
         const monedas = [
             { monNom: 'Dólar', status: true },
-            { monNom: 'Euro', status: true },
+            { monNom: 'Peso Colombiano', status: true },
             { monNom: 'Bolívar', status: true }
         ];
         await this.prismaService.moneda.createMany({ data: monedas });

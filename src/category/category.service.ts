@@ -28,7 +28,7 @@ export class CategoryService {
             baseResponse.message = 'Categoría creada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
@@ -48,7 +48,7 @@ export class CategoryService {
             baseResponse.message = 'Categoría actualizada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }

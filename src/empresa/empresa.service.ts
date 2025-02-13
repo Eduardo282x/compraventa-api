@@ -27,7 +27,7 @@ export class EmpresaService {
             baseResponse.message = 'Empresa creada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
@@ -50,7 +50,7 @@ export class EmpresaService {
             baseResponse.message = 'Empresa actualizada.'
             return baseResponse;
         } catch (err) {
-            badResponse.message += err;
+            badResponse.message = err;
             return badResponse;
         }
     }
