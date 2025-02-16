@@ -6,14 +6,12 @@ import { CreateProveedorDto, UpdateProveedorDto } from 'src/dto/proveedores.dto'
 export class ProveedoresController {
 
     constructor(private proveedoresServices: ProveedoresService) {
-
     }
 
     @Get()
     getProveedores() {
         return this.proveedoresServices.getProveedores();
     }
-
 
     @Post()
     createProveedores(@Body() createProveedorDto: CreateProveedorDto) {

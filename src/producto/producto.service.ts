@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { badResponse, baseResponse, DtoBaseResponse } from 'src/dto/base.dto';
-import { CreateProductoDto, UpdateProductoDto } from 'src/dto/producto.dto';
+import { CreateProductoDto, DtoIncreaseProductStore, DtoSaveProduct, UpdateProductoDto } from 'src/dto/producto.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -9,53 +9,27 @@ export class ProductoService {
 
     }
 
-    async getProducts() {
-        return await this.prismaService.producto.findMany({
+    async getStore() {
+        return await this.prismaService.store.findMany({
             include: {
+                provider: true,
+                category: true,
                 Moneda: true,
-                Sucursal: true,
-                Unidad: true,
-                Categoria: true
+                unidad: true
             },
         });
     }
 
-    async getFilteredProducts(category: string, product: string) {
-        const findCategory = await this.prismaService.categoria.findFirst({
+    async getProductsBySucursal(sucursalId: number) {
+        return await this.prismaService.producto.findMany({
+            include: {
+                store: { include: { category: true } },
+                sucursal: true,
+            },
             where: {
-                nombre: category
+                sucursalId
             }
-        })
-
-        if(findCategory) {
-            return await this.prismaService.producto.findMany({
-                include: {
-                    Moneda: true,
-                    Sucursal: true,
-                    Unidad: true,
-                    Categoria: true
-                },
-                where: {
-                    catId: findCategory.catId
-                }
-            });
-        } else {
-            return await this.prismaService.producto.findMany({
-                include: {
-                    Moneda: true,
-                    Sucursal: true,
-                    Unidad: true,
-                    Categoria: true
-                },
-                where: {
-                    prodNom: {
-                        contains: product,
-                        mode: 'insensitive',    
-                    }
-                }
-            });
-        }
-        
+        });
     }
 
     async getMonedas() {
@@ -66,33 +40,60 @@ export class ProductoService {
         return await this.prismaService.unidad.findMany();
     }
 
-    async createProducto(produc: CreateProductoDto): Promise<DtoBaseResponse> {
-        try {
+    async getFilteredProducts(category: string, product: string, sucursalId: number) {
+        const findCategory = await this.prismaService.category.findFirst({
+            where: {
+                category
+            }
+        })
 
-            const findSucursalByCategory = await this.prismaService.categoria.findFirst({
+        if (findCategory) {
+            return await this.prismaService.producto.findMany({
+                include: {
+                    store: { include: { category: true } },
+                },
                 where: {
-                    catId: produc.catId
+                    store: { categoryId: findCategory.id },
+                    sucursalId
                 }
-            })
+            });
+        } else {
+            return await this.prismaService.producto.findMany({
+                include: {
+                    store: { include: { category: true } },
+                },
+                where: {
+                    store: {
+                        name: {
+                            contains: product,
+                            mode: 'insensitive',
+                        }
+                    },
+                    sucursalId
+                }
+            });
+        }
+    }
 
-            await this.prismaService.producto.create({
+    async createProducto(product: CreateProductoDto): Promise<DtoBaseResponse> {
+        try {
+            await this.prismaService.store.create({
                 data: {
-                    catId: produc.catId,
-                    prodNom: produc.prodNom,
-                    prodDescrip: produc.prodDescrip,
-                    prodPcompra: produc.prodPcompra,
-                    prodPventa: produc.prodPventa,
-                    prodStock: produc.prodStock,
-                    prodFechaven: produc.prodFechaven,
-                    prodImg: produc.prodImg,
-                    status: produc.status,
-                    MonedaMonId: produc.MonedaMonId,
-                    SucursalSucId: findSucursalByCategory.sucId,
-                    UnidadUndId: produc.UnidadUndId,
+                    categoryId: product.categoryId,
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    amount: product.amount,
+                    expirationDate: product.expirationDate,
+                    img: product.img,
+                    providerId: product.providerId,
+                    currencyId: product.currencyId,
+                    unitId: product.unitId,
+                    unit: product.unit.toString(),
                 }
             })
 
-            baseResponse.message = 'Producto creada.'
+            baseResponse.message = 'Producto creado.'
             return baseResponse;
         } catch (err) {
             badResponse.message = err;
@@ -100,31 +101,95 @@ export class ProductoService {
         }
     }
 
-    async updateProducto(produc: UpdateProductoDto): Promise<DtoBaseResponse> {
+    async saveProductInSucursal(product: DtoSaveProduct) {
         try {
-            const findSucursalByCategory = await this.prismaService.categoria.findFirst({
-                where: {
-                    catId: produc.catId
-                }
+            const findProductInStore = await this.prismaService.store.findFirst({
+                where: { id: product.storeId }
             })
 
-            await this.prismaService.producto.update({
+            if (!findProductInStore) {
+                badResponse.message = 'Producto no encontrado en almacén.'
+                return badResponse;
+            }
+
+            if (product.amount > findProductInStore.amount) {
+                badResponse.message = 'La cantidad solicitada excede la cantidad del almacén.'
+                return badResponse;
+            }
+
+            const findProduct = await this.prismaService.producto.findFirst({
+                where: { storeId: product.storeId, sucursalId: product.sucursalId }
+            })
+
+            if (findProduct) {
+                await this.prismaService.producto.update({
+                    data: { amount: findProduct.amount + product.amount },
+                    where: { id: findProduct.id }
+                })
+            } else {
+                await this.prismaService.producto.create({
+                    data: {
+                        storeId: product.storeId, sucursalId: product.sucursalId, amount: product.amount
+                    }
+                })
+            }
+
+            await this.prismaService.store.update({
+                data: { amount: findProductInStore.amount - product.amount },
+                where: { id: product.storeId }
+            })
+
+            baseResponse.message = 'Producto guardado.';
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err;
+            return badResponse;
+        }
+    }
+
+    async increaseAmountStore(product: DtoIncreaseProductStore) {
+        try {
+
+            const findProductInStore = await this.prismaService.store.findFirst({
+                where: { id: product.storeId }
+            })
+
+            if (!findProductInStore) {
+                badResponse.message = 'Producto no encontrado en almacén.'
+                return badResponse;
+            }
+
+            await this.prismaService.store.update({
+                data: { amount: product.amount + findProductInStore.amount },
+                where: { id: findProductInStore.id }
+            })
+
+            baseResponse.message = 'Cantidad en almacén aumentada.'
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err;
+            return badResponse;
+        }
+    }
+
+    async updateProducto(product: UpdateProductoDto): Promise<DtoBaseResponse> {
+        try {
+            await this.prismaService.store.update({
                 data: {
-                    catId: produc.catId,
-                    prodNom: produc.prodNom,
-                    prodDescrip: produc.prodDescrip,
-                    prodPcompra: produc.prodPcompra,
-                    prodPventa: produc.prodPventa,
-                    prodStock: produc.prodStock,
-                    prodFechaven: produc.prodFechaven,
-                    prodImg: produc.prodImg,
-                    status: produc.status,
-                    MonedaMonId: produc.MonedaMonId,
-                    SucursalSucId: findSucursalByCategory.sucId,
-                    UnidadUndId: produc.UnidadUndId,
+                    categoryId: product.categoryId,
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    amount: product.amount,
+                    expirationDate: product.expirationDate,
+                    img: product.img,
+                    providerId: product.providerId,
+                    currencyId: product.currencyId,
+                    unitId: product.unitId,
+                    unit: product.unit.toString(),
                 },
                 where: {
-                    prodId: produc.prodId
+                    id: product.id
                 }
             })
 
@@ -137,9 +202,9 @@ export class ProductoService {
     }
 
     async deleteProducto(id: number): Promise<DtoBaseResponse> {
-        await this.prismaService.producto.delete({
+        await this.prismaService.store.delete({
             where: {
-                prodId: id
+                id: id
             }
         })
         baseResponse.message = 'Producto eliminada.';

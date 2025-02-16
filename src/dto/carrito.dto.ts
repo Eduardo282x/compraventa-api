@@ -2,16 +2,16 @@ import { IsNumber } from "class-validator";
 
 export class DtoCarrito {
     @IsNumber()
-    cliId: number;
+    productId: number;
     @IsNumber()
-    prodId: number;
+    amount: number;
     @IsNumber()
-    cant: number;
+    clientId: number;
 }
 
 export class DtoUpdateAmountCarrito {
     @IsNumber()
     id: number;
     @IsNumber()
-    cant: number;
+    amount: number;
 }

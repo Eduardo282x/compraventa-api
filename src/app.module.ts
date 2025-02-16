@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductoModule } from './producto/producto.module';
-import { VentaModule } from './venta/venta.module';
 import { PagoModule } from './pago/pago.module';
 import { SucursalModule } from './sucursal/sucursal.module';
 import { EmpresaModule } from './empresa/empresa.module';
@@ -16,7 +15,7 @@ import { CategoryModule } from './category/category.module';
 import { CarritoModule } from './carrito/carrito.module';
 
 @Module({
-  imports: [ProductoModule, VentaModule, PagoModule, SucursalModule, EmpresaModule, UsuariosModule, ClientesModule, ProveedoresModule, MainloadModule, AuthModule, CategoryModule, CarritoModule],
+  imports: [ProductoModule, PagoModule, SucursalModule, EmpresaModule, UsuariosModule, ClientesModule, ProveedoresModule, MainloadModule, AuthModule, CategoryModule, CarritoModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

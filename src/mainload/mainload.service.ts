@@ -8,125 +8,145 @@ export class MainloadService {
     constructor(private prismaService: PrismaService) { }
 
     async loadBaseData(): Promise<DtoBaseResponse> {
-        // 1. Moneda
         const monedas = [
-            { monNom: 'Dólar', status: true },
-            { monNom: 'Peso Colombiano', status: true },
-            { monNom: 'Bolívar', status: true }
+            { currency: 'Dólar', symbol: 'USD' },
+            { currency: 'Peso Colombiano', symbol: 'COP' },
+            { currency: 'Bolívar', symbol: 'VES' }
         ];
         await this.prismaService.moneda.createMany({ data: monedas });
 
-        // 2. Unidad
         const unidades = [
-            { undNom: 'Unidad', status: true },
-            { undNom: 'Kilogramo', status: true },
-            { undNom: 'Litro', status: true },
-            { undNom: 'Metro', status: true },
-            { undNom: 'Caja', status: true },
-            { undNom: 'Paquete', status: true },
-            { undNom: 'Docena', status: true },
-            { undNom: 'Tonelada', status: true },
-            { undNom: 'Galón', status: true },
-            { undNom: 'Mililitro', status: true },
+            { unit: 'Kilogramo' },
+            { unit: 'Gramo' },
+            { unit: 'Litro' },
+            { unit: 'Miligramo' },
+            { unit: 'Mililitro' },
         ];
         await this.prismaService.unidad.createMany({ data: unidades });
 
-        // 3. Empresa
-        const empresas = Array.from({ length: 10 }, (_, i) => ({
-            empNom: `Empresa ${i + 1}`,
-            empRuc: `J-${12345678 + i}`,
-            empCorreo: `contacto@empresa${i + 1}.com`,
-            empTelf: `0412${1234567 + i}`,
-            empDirecc: `Dirección ${i + 1}`,
-            status: true,
-        }));
-        await this.prismaService.empresa.createMany({ data: empresas });
+        await this.prismaService.empresa.create({
+            data: {
+                companyName: 'Servimar',
+                companyRuc: '1234567',
+                companyPhone: '0536271823',
+                companyEmail: 'servimar@gmail.com',
+                companyAddress: 'Direccion',
+            }
+        });
 
-        // 4. Sucursal
-        const sucursales = Array.from({ length: 10 }, (_, i) => ({
-            empId: (i % 5) + 1, // Relaciona las sucursales con las primeras 5 empresas
-            sucNom: `Sucursal ${i + 1}`,
-            status: true,
-        }));
-        await this.prismaService.sucursal.createMany({ data: sucursales });
-
-        // 5. Proveedor
-        const proveedores = Array.from({ length: 10 }, (_, i) => ({
-            empId: (i % 5) + 1, // Relaciona los proveedores con las primeras 5 empresas
-            provNom: `Proveedor ${i + 1}`,
-            provRuc: `G-${12345678 + i}`,
-            provTelf: `0424${1234567 + i}`,
-            provDirecc: `Dirección Proveedor ${i + 1}`,
-            provCorreo: `proveedor${i + 1}@correo.com`,
-            status: true,
-        }));
-        await this.prismaService.proveedor.createMany({ data: proveedores });
-
-        // 6. Categoría
-        await this.prismaService.categoria.createMany({
+        await this.prismaService.sucursal.createMany({
             data: [
-                { sucId: 1, nombre: "Analgésicos" },
-                { sucId: 1, nombre: "Antibióticos" },
-                { sucId: 1, nombre: "Vacunas" },
-                { sucId: 1, nombre: "Antihipertensivos" },
-                { sucId: 1, nombre: "Antidiabéticos" },
-                { sucId: 1, nombre: "Antiinflamatorios" },
-                { sucId: 1, nombre: "Antihistamínicos" }
+                { companyId: 1, nombre: 'Sucursal 1' },
+                { companyId: 1, nombre: 'Sucursal 2' },
             ]
         });
 
-        // 7. Producto
-        await this.prismaService.producto.createMany({
+        await this.prismaService.rol.createMany({
             data: [
-                { catId: 3, prodNom: "Vaxigrip", prodDescrip: "Vacuna contra la influenza.", prodPcompra: 50, prodPventa: 70, prodStock: 90, prodImg: "https://example.com/vaxigrip.jpg", prodFechaven: new Date("2025-12-11"), status: true },
-                { catId: 5, prodNom: "Implanon", prodDescrip: "Implante anticonceptivo subdérmico.", prodPcompra: 150, prodPventa: 200, prodStock: 85, prodImg: "https://example.com/implanon.jpg", prodFechaven: new Date("2025-12-12"), status: true },
-                { catId: 3, prodNom: "Typhim Vi", prodDescrip: "Vacuna contra la fiebre tifoidea.", prodPcompra: 60, prodPventa: 80, prodStock: 75, prodImg: "https://example.com/typhim-vi.jp", prodFechaven: new Date("2025-12-1",), status: true },
-                { catId: 2, prodNom: "Docetaxel", prodDescrip: "Quimioterapéutico utilizado en el tratamiento del cáncer.", prodPcompra: 500, prodPventa: 700, prodStock: 50, prodImg: "https://example.com/docetaxel.jpg", prodFechaven: new Date("2025-12-14"), status: true },
-                { catId: 3, prodNom: "Stamaril", prodDescrip: "Vacuna contra la fiebre amarilla.", prodPcompra: 55, prodPventa: 75, prodStock: 65, prodImg: "https://example.com/stamaril.jpg", prodFechaven: new Date("2025-12-15"), status: true },
-                { catId: 5, prodNom: "Saxenda", prodDescrip: "Medicamento para el control del peso.", prodPcompra: 400, prodPventa: 500, prodStock: 45, prodImg: "https://example.com/saxenda.jpg", prodFechaven: new Date("2025-12-16"), status: true },
-                { catId: 3, prodNom: "Hexaxim", prodDescrip: "Vacuna hexavalente para protección infantil.", prodPcompra: 90, prodPventa: 120, prodStock: 80, prodImg: "https://example.com/hexaxim.jpg", prodFechaven: new Date("2025-12-17"), status: true },
-                { catId: 2, prodNom: "Timoglobulina", prodDescrip: "Inmunosupresor para trasplantes de órganos.", prodPcompra: 600, prodPventa: 800, prodStock: 30, prodImg: "https://example.com/timoglobulina.jpg", prodFechaven: new Date("2025-12-18"), status: true },
-                { catId: 5, prodNom: "Levonogestrel", prodDescrip: "Anticonceptivo de emergencia.", prodPcompra: 20, prodPventa: 30, prodStock: 100, prodImg: "https://example.com/levonogestrel.jpg", prodFechaven: new Date("2025-12-19"), status: true },
-                { catId: 3, prodNom: "Menactra", prodDescrip: "Vacuna contra la meningitis meningocócica.", prodPcompra: 80, prodPventa: 100, prodStock: 70, prodImg: "https://example.com/menactra.jpg", prodFechaven: new Date("2025-12-20"), status: true },
-                { catId: 2, prodNom: "Cromus", prodDescrip: "Tratamiento para enfermedades inflamatorias crónicas.", prodPcompra: 120, prodPventa: 160, prodStock: 60, prodImg: "https://example.com/cromus.jpg", prodFechaven: new Date("2025-12-21"), status: true }
-
+                { rol: 'Administrador' },
+                { rol: 'Vendedor' },
+                { rol: 'Gerente' },
             ]
         });
 
-        // 8. Rol
-        const roles = [
-            { rol: 'Administrador' },
-            { rol: 'Vendedor' },
-            { rol: 'Cajero' },
-            { rol: 'Supervisor' },
-            { rol: 'Cliente' },
-        ];
-        await this.prismaService.rol.createMany({ data: roles });
-
-        // 9. Usuario
         await this.prismaService.usuario.create({
             data: {
                 sucId: 1,
                 rolId: 1,
-                usuNombre: 'Admin',
-                usuApellido: 'Admin',
-                usuCorreo: 'admin@gmail.com',
-                usuPassword: 'admin',
-                status: true,
+                name: 'admin',
+                lastName: 'admin',
+                email: 'admin@gmail.com',
+                password: 'admin',
             }
         });
 
-        // 10. Cliente
+        await this.prismaService.category.createMany({
+            data: [
+                { category: "Analgésicos" },
+                { category: "Antibióticos" },
+                { category: "Vacunas" },
+                { category: "Antihipertensivos" },
+                { category: "Antidiabéticos" },
+                { category: "Antiinflamatorios" },
+                { category: "Antihistamínicos" }
+            ]
+        });
+
+        await this.prismaService.proveedor.createMany({
+            data: [
+                {
+                    name: 'Proveedor 1',
+                    ruc: '12345678',
+                    phone: '8651238123',
+                    address: 'direccion Proveedor 1',
+                    email: 'proveedor@gmail.com',
+                }
+            ]
+        });
+
+        await this.prismaService.store.createMany({
+            data: [
+                { categoryId: 3, name: "Vaxigrip", description: "Vacuna contra la influenza.", price: 50, amount: 90, img: "https://example.com/vaxigrip.jpg", expirationDate: new Date("2025-12-11"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 5, name: "Implanon", description: "Implante anticonceptivo subdérmico.", price: 150, amount: 85, img: "https://example.com/implanon.jpg", expirationDate: new Date("2025-12-12"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 3, name: "Typhim Vi", description: "Vacuna contra la fiebre tifoidea.", price: 60, amount: 75, img: "https://example.com/typhim-vi.jp", expirationDate: new Date("2025-12-1",), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 2, name: "Docetaxel", description: "Quimioterapéutico utilizado en el tratamiento del cáncer.", price: 500, amount: 50, img: "https://example.com/docetaxel.jpg", expirationDate: new Date("2025-12-14"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 3, name: "Stamaril", description: "Vacuna contra la fiebre amarilla.", price: 55, amount: 65, img: "https://example.com/stamaril.jpg", expirationDate: new Date("2025-12-15"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 5, name: "Saxenda", description: "Medicamento para el control del peso.", price: 400, amount: 45, img: "https://example.com/saxenda.jpg", expirationDate: new Date("2025-12-16"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 3, name: "Hexaxim", description: "Vacuna hexavalente para protección infantil.", price: 90, amount: 80, img: "https://example.com/hexaxim.jpg", expirationDate: new Date("2025-12-17"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 2, name: "Timoglobulina", description: "Inmunosupresor para trasplantes de órganos.", price: 600, amount: 30, img: "https://example.com/timoglobulina.jpg", expirationDate: new Date("2025-12-18"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 5, name: "Levonogestrel", description: "Anticonceptivo de emergencia.", price: 20, amount: 100, img: "https://example.com/levonogestrel.jpg", expirationDate: new Date("2025-12-19"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 3, name: "Menactra", description: "Vacuna contra la meningitis meningocócica.", price: 80, amount: 70, img: "https://example.com/menactra.jpg", expirationDate: new Date("2025-12-20"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 },
+                { categoryId: 2, name: "Cromus", description: "Tratamiento para enfermedades inflamatorias crónicas.", price: 120, amount: 60, img: "https://example.com/cromus.jpg", expirationDate: new Date("2025-12-21"), providerId: 1, currencyId: 1, unit: '1', unitId: 1 }
+            ]
+        })
+
+        await this.prismaService.producto.createMany({
+            data: [
+                { storeId: 1, sucursalId: 1, amount: 45 },
+                { storeId: 1, sucursalId: 2, amount: 45 },
+                { storeId: 2, sucursalId: 1, amount: 40 },
+                { storeId: 2, sucursalId: 2, amount: 40 },
+                { storeId: 3, sucursalId: 1, amount: 35 },
+                { storeId: 3, sucursalId: 2, amount: 35 },
+                { storeId: 4, sucursalId: 1, amount: 25 },
+                { storeId: 4, sucursalId: 2, amount: 25 },
+                { storeId: 5, sucursalId: 1, amount: 30 },
+                { storeId: 5, sucursalId: 2, amount: 30 },
+                { storeId: 6, sucursalId: 1, amount: 20 },
+                { storeId: 6, sucursalId: 2, amount: 20 },
+                { storeId: 7, sucursalId: 1, amount: 40 },
+                { storeId: 7, sucursalId: 2, amount: 40 },
+                { storeId: 8, sucursalId: 1, amount: 15 },
+                { storeId: 8, sucursalId: 2, amount: 15 },
+                { storeId: 9, sucursalId: 1, amount: 40 },
+                { storeId: 9, sucursalId: 2, amount: 40 },
+                { storeId: 10, sucursalId: 1, amount: 30 },
+                { storeId: 10, sucursalId: 2, amount: 30 },
+            ]
+        });
+
         const clientes = Array.from({ length: 10 }, (_, i) => ({
-            cliNombre: `Cliente ${i + 1}`,
-            cliApellido: `Cliente Apellido ${i + 1}`,
-            cliRif: `${12345678 + i}`,
-            cliTelefono: `0412${2345678 + i}`,
-            cliDireccion: `Calle ${i + 1}`,
-            cliCorreo: `cliente${i + 1}@correo.com`,
-            cliPassword: `1234`,
+            clientName: `Cliente ${i + 1}`,
+            clientLastName: `Cliente Apellido ${i + 1}`,
+            clientRif: `${12345678 + i}`,
+            clientPhone: `0412${2345678 + i}`,
+            clientAddress: `Calle ${i + 1}`,
+            clientEmail: `cliente${i + 1}@correo.com`,
+            clientPassword: `1234`,
         }));
         await this.prismaService.cliente.createMany({ data: clientes });
+
+        await this.prismaService.paymentMethods.create({
+            data: {
+                bank: 'Banco',
+                identify: '12345678',
+                email: 'correo@gmail.com',
+                phone: '12345678',
+                owner: 'Propietario',
+                type: 'transferencia',
+                currencyId: 1,
+            }
+        })
 
         baseResponse.message = 'Datos base cargados correctamente.';
         return baseResponse;

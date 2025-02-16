@@ -1,32 +1,20 @@
-import { IsNotEmpty, IsString, IsBoolean, IsEmail, IsNumber } from 'class-validator';
+import { IsString, IsEmail, IsNumber } from 'class-validator';
 
 export class CreateProveedorDto {
-    @IsNotEmpty()
     @IsString()
-    provNom: string;
-
-    @IsNotEmpty()
+    name: string;
     @IsString()
-    provRuc: string;
-
-    @IsNotEmpty()
+    ruc: string;
     @IsString()
-    provTelf: string;
-
-    @IsNotEmpty()
+    phone: string;
     @IsString()
-    provDirecc: string;
-
-    @IsNotEmpty()
+    address: string;
     @IsEmail()
-    provCorreo: string;
-
-    @IsBoolean()
-    status: boolean;
+    email: string;
 }
 
 
 export class UpdateProveedorDto extends CreateProveedorDto {
     @IsNumber()
-    provId: number;
+    id: number;
 }

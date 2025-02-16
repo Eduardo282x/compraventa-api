@@ -9,10 +9,10 @@ export class CarritoService {
 
     }
 
-    async getCarritoByClient(cliId: number) {
+    async getCarritoByClient(clientId: number) {
         return await this.prismaService.carrito.findMany({
-            where: { cliId },
-            include: { producto: { include: { Categoria: true } } }
+            where: { clientId },
+            include: { producto: { include: { store: true } } }
         })
     }
 
@@ -20,9 +20,9 @@ export class CarritoService {
         try {
             await this.prismaService.carrito.create({
                 data: {
-                    cliId: carrito.cliId,
-                    prodId: carrito.prodId,
-                    cant: carrito.cant
+                    productId: carrito.productId,
+                    amount: carrito.amount,
+                    clientId: carrito.clientId
                 }
             })
             baseResponse.message = 'Producto agregado';
@@ -37,7 +37,7 @@ export class CarritoService {
         try {
             await this.prismaService.carrito.update({
                 data: {
-                    cant: carrito.cant
+                    amount: carrito.amount
                 },
                 where: {
                     id: carrito.id

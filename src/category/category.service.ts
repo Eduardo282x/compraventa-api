@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DtoBaseResponse, baseResponse, badResponse } from 'src/dto/base.dto';
-import { DtoCategorias, DtoUpdarteCategorias } from 'src/dto/producto.dto';
+import { DtoCategory, DtoUpdateCategories } from 'src/dto/producto.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -9,19 +9,23 @@ export class CategoryService {
     constructor(private prismaService: PrismaService) {}
 
     async getCategories() {
-        return await this.prismaService.categoria.findMany({
-            include: {
-                sucursal: true
-            }
-        });
+        return await this.prismaService.category.findMany({orderBy: {id:'asc'}});
     }
 
-    async createCategory(category: DtoCategorias): Promise<DtoBaseResponse> {
+    async createCategory(category: DtoCategory): Promise<DtoBaseResponse> {
         try {
-            await this.prismaService.categoria.create({
+            const findCategory = await this.prismaService.category.findFirst({
+                where: {category: category.category}
+            });
+
+            if(findCategory){
+                badResponse.message = 'Esta categoria ya existe.';
+            return badResponse;
+            }
+
+            await this.prismaService.category.create({
                 data: {
-                    sucId: category.sucId,
-                    nombre: category.nombre,
+                    category: category.category,
                 }
             })
 
@@ -33,15 +37,14 @@ export class CategoryService {
         }
     }
 
-    async updateCategory(category: DtoUpdarteCategorias): Promise<DtoBaseResponse> {
+    async updateCategory(category: DtoUpdateCategories): Promise<DtoBaseResponse> {
         try {
-            await this.prismaService.categoria.update({
+            await this.prismaService.category.update({
                 data: {
-                    sucId: category.sucId,
-                    nombre: category.nombre,
+                    category: category.category,
                 },
                 where: {
-                    catId: category.catId
+                    id: category.id
                 }
             })
 
@@ -54,9 +57,9 @@ export class CategoryService {
     }
 
     async deleteCategory(id: number): Promise<DtoBaseResponse> {
-        await this.prismaService.categoria.delete({
+        await this.prismaService.category.delete({
             where: {
-                catId: id
+                id: id
             }
         })
         baseResponse.message = 'Categoría eliminada.';

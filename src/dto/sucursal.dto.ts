@@ -2,11 +2,9 @@ import { IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class DtoSucursal {
     @IsNumber()
-    empId: number;
+    companyId: number;
     @IsString()
-    sucNom: string;
-    @IsBoolean()
-    status: boolean;
+    nombre: string;
 }
 
 export class DtoUpdateSucursal extends DtoSucursal {

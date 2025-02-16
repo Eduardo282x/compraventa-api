@@ -1,18 +1,16 @@
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsNumber, IsString } from "class-validator";
 
 export class DtoEmpresa {
     @IsString()
-    empNom: string;
+    companyName: string;
     @IsString()
-    empRuc: string;
+    companyRuc: string;
     @IsString()
-    empCorreo: string;
+    companyPhone: string;
+    @IsEmail()
+    companyEmail: string;
     @IsString()
-    empTelf: string;
-    @IsString()
-    empDirecc: string;
-    @IsBoolean()
-    status: boolean;
+    companyAddress: string;
 }
 
 export class DtoUpdateEmpresa extends DtoEmpresa {

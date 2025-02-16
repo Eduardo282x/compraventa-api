@@ -16,13 +16,13 @@ export class ClientesService {
         try {
             await this.prismaService.cliente.create({
                 data: {
-                    cliNombre: cliente.cliNombre,
-                    cliApellido: cliente.cliApellido,
-                    cliRif: cliente.cliRif,
-                    cliTelefono: cliente.cliTelefono,
-                    cliDireccion: cliente.cliDireccion,
-                    cliCorreo: cliente.cliCorreo,
-                    cliPassword: cliente.cliPassword,
+                    clientName: cliente.clientName,
+                    clientLastName: cliente.clientLastName,
+                    clientRif: cliente.clientRif,
+                    clientPhone: cliente.clientPhone,
+                    clientAddress: cliente.clientAddress,
+                    clientEmail: cliente.clientEmail,
+                    clientPassword: cliente.clientPassword,
                 }
             })
 
@@ -37,14 +37,15 @@ export class ClientesService {
         try {
             await this.prismaService.cliente.update({
                 data: {
-                    cliNombre: cliente.cliNombre,
-                    cliRif: cliente.cliRif,
-                    cliTelefono: cliente.cliTelefono,
-                    cliDireccion: cliente.cliDireccion,
-                    cliCorreo: cliente.cliCorreo,
+                    clientName: cliente.clientName,
+                    clientLastName: cliente.clientLastName,
+                    clientRif: cliente.clientRif,
+                    clientPhone: cliente.clientPhone,
+                    clientAddress: cliente.clientAddress,
+                    clientEmail: cliente.clientEmail,
                 },
                 where: {
-                    cliId: cliente.id
+                    id: cliente.id
                 }
             })
 
@@ -58,7 +59,7 @@ export class ClientesService {
     async deleteCliente(id: number): Promise<DtoBaseResponse> {
         await this.prismaService.cliente.delete({
             where: {
-                cliId: id
+                id: id
             }
         })
         baseResponse.message = 'Cliente eliminada.';

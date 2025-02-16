@@ -6,13 +6,13 @@ export class DtoUsuario {
     @IsNumber()
     rolId: number;
     @IsString()
-    usuNombre: string;
+    name: string;
     @IsString()
-    usuApellido: string;
+    lastName: string;
     @IsString()
-    usuCorreo: string;
+    email: string;
     @IsString()
-    usuPassword: string;
+    password: string;
     @IsBoolean()
     status: boolean;
 }

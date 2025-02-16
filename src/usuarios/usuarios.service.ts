@@ -12,7 +12,7 @@ export class UsuariosService {
     async getUsers() {
         return await this.prismaService.usuario.findMany({
             include: {
-                Rol: true
+                rol: true
             }
         });
     }
@@ -27,10 +27,10 @@ export class UsuariosService {
                 data: {
                     sucId: usuario.sucId,
                     rolId: usuario.rolId,
-                    usuNombre: usuario.usuNombre,
-                    usuApellido: usuario.usuApellido,
-                    usuCorreo: usuario.usuCorreo,
-                    usuPassword: usuario.usuPassword,
+                    name: usuario.name,
+                    lastName: usuario.lastName,
+                    email: usuario.email,
+                    password: usuario.password,
                     status: usuario.status,
                 }
             })
@@ -48,10 +48,10 @@ export class UsuariosService {
                 data: {
                     sucId: usuario.sucId,
                     rolId: usuario.rolId,
-                    usuNombre: usuario.usuNombre,
-                    usuApellido: usuario.usuApellido,
-                    usuCorreo: usuario.usuCorreo,
-                    usuPassword: usuario.usuPassword,
+                    name: usuario.name,
+                    lastName: usuario.lastName,
+                    email: usuario.email,
+                    password: usuario.password,
                     status: usuario.status,
                 },
                 where: {

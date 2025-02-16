@@ -7,247 +7,177 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CompraDetalle {
-  detcId      Int      @id @default(autoincrement())
-  comprId     Int
-  prodId      Int
-  prodPcompra Decimal  @db.Decimal(18, 2)
-  detcCant    Int
-  detcTotal   Decimal  @db.Decimal(18, 2)
-  fechCrea    DateTime @default(now())
-  status      Boolean  @default(true)
-
-  // Relaciones
-  Compra   Compra   @relation(fields: [comprId], references: [comprId])
-  Producto Producto @relation(fields: [prodId], references: [prodId])
+model Empresa {
+  id             Int        @id @default(autoincrement())
+  companyName    String
+  companyRuc     String
+  companyPhone   String
+  companyEmail   String
+  companyAddress String
+  createDate     DateTime   @default(now())
+  Sucursal       Sucursal[]
 }
 
-model Categoria {
-  catId    Int        @id @default(autoincrement())
+model Sucursal {
+  sucId     Int        @id @default(autoincrement())
+  companyId Int
+  nombre    String
+  empresa   Empresa    @relation(fields: [companyId], references: [id])
+  usuario   Usuario[]
+  Producto  Producto[]
+}
+
+model Rol {
+  id      Int       @id @default(autoincrement())
+  rol     String
+  usuario Usuario[]
+}
+
+model Usuario {
+  id       Int      @id @default(autoincrement())
   sucId    Int
-  sucursal Sucursal   @relation(fields: [sucId], references: [sucId])
-  nombre   String
+  rolId    Int
+  name     String
+  lastName String
+  email    String
+  password String
+  status   Boolean  @default(true)
+  sucursal Sucursal @relation(fields: [sucId], references: [sucId])
+  rol      Rol      @relation(fields: [rolId], references: [id])
+}
+
+model Proveedor {
+  id         Int      @id @default(autoincrement())
+  name       String
+  ruc        String   @db.VarChar(15)
+  phone      String
+  address    String
+  email      String
+  createDate DateTime @default(now())
+  Store      Store[]
+}
+
+model Category {
+  id       Int     @id @default(autoincrement())
+  category String
+  Store    Store[]
+}
+
+model Store {
+  id             Int      @id @default(autoincrement())
+  categoryId     Int
+  name           String
+  description    String?
+  price          Decimal  @db.Decimal(18, 2)
+  amount         Int      @default(0)
+  expirationDate DateTime
+  img            String?
+  providerId     Int
+  currencyId     Int
+  unitId         Int
+  unit           String
+  createDate     DateTime @default(now())
+
+  provider Proveedor  @relation(fields: [providerId], references: [id])
+  category Category   @relation(fields: [categoryId], references: [id])
+  Moneda   Moneda     @relation(fields: [currencyId], references: [id])
+  unidad   Unidad     @relation(fields: [unitId], references: [id])
   Producto Producto[]
 }
 
 model Producto {
-  prodId        Int      @id @default(autoincrement())
-  catId         Int
-  prodNom       String
-  prodDescrip   String?  
-  prodPcompra   Decimal  @db.Decimal(18, 2)
-  prodPventa    Decimal  @db.Decimal(18, 2)
-  prodStock     Int      @default(0)
-  prodFechaven  DateTime
-  prodImg       String?  
-  fechCrea      DateTime @default(now())
-  status        Boolean  @default(true)
-  MonedaMonId   Int?
-  SucursalSucId Int?
-  UnidadUndId   Int?
+  id         Int @id @default(autoincrement())
+  storeId    Int
+  sucursalId Int
+  amount     Int @default(0)
 
-  // Relaciones
-  CompraDetalle CompraDetalle[]
-  VentaDetalle  VentaDetalle[]
-  Categoria     Categoria       @relation(fields: [catId], references: [catId])
-  Moneda        Moneda?         @relation(fields: [MonedaMonId], references: [monId])
-  Sucursal      Sucursal?       @relation(fields: [SucursalSucId], references: [sucId])
-  Unidad        Unidad?         @relation(fields: [UnidadUndId], references: [undId])
-  Carrito       Carrito[]
+  store      Store        @relation(fields: [storeId], references: [id])
+  sucursal   Sucursal     @relation(fields: [sucursalId], references: [sucId])
+  carrito    Carrito[]
+  DetPedidos DetPedidos[]
 }
 
 model Cliente {
-  cliId        Int    @id @default(autoincrement())
-  cliNombre    String
-  cliApellido  String
-  cliRif       String
-  cliTelefono  String
-  cliDireccion String
-  cliCorreo    String
-  cliPassword  String
-
-  // Relaciones
-  Venta   Venta[]
-  Carrito Carrito[]
-  Pedidos Pedidos[]
-}
-
-model Compra {
-  comprId       Int      @id @default(autoincrement())
-  provId        Int
-  comprSubtotal Decimal  @default(0.00) @db.Decimal(18, 2)
-  comprIgv      Decimal  @default(0.00) @db.Decimal(18, 2)
-  comprTotal    Decimal  @default(0.00) @db.Decimal(18, 2)
-  fechCrea      DateTime @default(now())
-  status        Boolean  @default(true)
-
-  // Relaciones
-  Proveedor     Proveedor       @relation(fields: [provId], references: [provId])
-  CompraDetalle CompraDetalle[]
-  Pago          Pago?           @relation(fields: [PagoPagId], references: [pagId])
-  PagoPagId     Int?
-}
-
-model Documento {
-  docId     Int      @id @default(autoincrement())
-  docNombre String
-  docTipo   String
-  fechCrea  DateTime @default(now())
-
-  // Relaciones
-  Venta Venta[]
-}
-
-model Empresa {
-  empId     Int      @id @default(autoincrement())
-  empNom    String
-  empRuc    String
-  empCorreo String
-  empTelf   String
-  empDirecc String
-  fechCrea  DateTime @default(now())
-  status    Boolean  @default(true)
-
-  // Relaciones
-  Sucursal Sucursal[]
-}
-
-model Proveedor {
-  provId     Int      @id @default(autoincrement())
-  empId      Int
-  provNom    String
-  provRuc    String   @db.VarChar(15)
-  provTelf   String
-  provDirecc String
-  provCorreo String
-  fechCrea   DateTime @default(now())
-  status     Boolean  @default(true)
-
-  // Relaciones
-  Compra Compra[]
-}
-
-model Rol {
-  id  Int    @id @default(autoincrement())
-  rol String
-
-  // Relaciones
-  Usuario Usuario[]
-}
-
-model Usuario {
-  id          Int     @id @default(autoincrement())
-  sucId       Int
-  rolId       Int
-  usuNombre   String
-  usuApellido String
-  usuCorreo   String
-  usuPassword String
-  status      Boolean @default(true)
-
-  // Relaciones
-  Sucursal Sucursal @relation(fields: [sucId], references: [sucId])
-  Rol      Rol      @relation(fields: [rolId], references: [id])
-}
-
-model VentaDetalle {
-  detvId     Int     @id @default(autoincrement())
-  ventId     Int
-  prodId     Int
-  prodPventa Decimal @db.Decimal(18, 2)
-  detvCant   Int
-  detvTotal  Decimal @db.Decimal(18, 2)
-
-  // Relaciones
-  Venta    Venta    @relation(fields: [ventId], references: [ventId])
-  Producto Producto @relation(fields: [prodId], references: [prodId])
-}
-
-model Venta {
-  ventId       Int      @id @default(autoincrement())
-  cliId        Int
-  ventSubtotal Decimal  @default(0.00) @db.Decimal(18, 2)
-  ventIgv      Decimal  @default(0.00) @db.Decimal(18, 2)
-  ventTotal    Decimal  @default(0.00) @db.Decimal(18, 2)
-  fechCrea     DateTime @default(now())
-
-  // Relaciones
-  Cliente        Cliente        @relation(fields: [cliId], references: [cliId])
-  VentaDetalle   VentaDetalle[]
-  Documento      Documento?     @relation(fields: [DocumentoDocId], references: [docId])
-  DocumentoDocId Int?
-  Moneda         Moneda?        @relation(fields: [MonedaMonId], references: [monId])
-  MonedaMonId    Int?
-  Pago           Pago?          @relation(fields: [PagoPagId], references: [pagId])
-  PagoPagId      Int?
-}
-
-model Pedidos {
-  id      Int     @id @default(autoincrement())
-  cliId   Int
-  pending Boolean
-
-  fecha   DateTime @default(now())
-  cliente Cliente  @relation(fields: [cliId], references: [cliId])
+  id             Int       @id @default(autoincrement())
+  clientName     String
+  clientLastName String
+  clientRif      String
+  clientPhone    String
+  clientAddress  String
+  clientEmail    String
+  clientPassword String
+  Carrito        Carrito[]
+  Pedidos        Pedidos[]
 }
 
 model Carrito {
-  id     Int @id @default(autoincrement())
-  prodId Int
-  cant   Int
-  cliId  Int
-
-  cliente  Cliente  @relation(fields: [cliId], references: [cliId])
-  producto Producto @relation(fields: [prodId], references: [prodId])
+  id        Int      @id @default(autoincrement())
+  productId Int
+  amount    Int
+  clientId  Int
+  cliente   Cliente  @relation(fields: [clientId], references: [id])
+  producto  Producto @relation(fields: [productId], references: [id])
 }
 
-model Pago {
-  pagId    Int      @id @default(autoincrement())
-  bank     String
-  identify String
-  email    String
-  phone    String
-  owner    String
-  type     String
-  fechCrea DateTime @default(now())
-  status   Boolean  @default(true)
-
-  // Relaciones
-  Compra Compra[]
-  Venta  Venta[]
+model Pedidos {
+  id         Int          @id @default(autoincrement())
+  clientId   Int
+  paymentId  Int
+  status     String
+  total      Int
+  createDate DateTime     @default(now())
+  cliente    Cliente      @relation(fields: [clientId], references: [id])
+  payment    Payments     @relation(fields: [paymentId], references: [id])
+  DetPedidos DetPedidos[]
 }
 
-model Sucursal {
-  sucId    Int      @id @default(autoincrement())
-  empId    Int
-  sucNom   String
-  fechCrea DateTime @default(now())
-  status   Boolean  @default(true)
+model DetPedidos {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  pedidos   Pedidos  @relation(fields: [orderId], references: [id])
+  productId Int
+  amount    Int
+  total     Int
+  producto  Producto @relation(fields: [productId], references: [id])
+}
 
-  // Relaciones
-  Empresa   Empresa     @relation(fields: [empId], references: [empId])
-  Producto  Producto[]
-  Usuario   Usuario[]
-  Categoria Categoria[]
+model PaymentMethods {
+  id         Int        @id @default(autoincrement())
+  bank       String
+  identify   String
+  email      String
+  phone      String
+  owner      String
+  type       String
+  currencyId Int
+  currency   Moneda     @relation(fields: [currencyId], references: [id])
+  Payments   Payments[]
+}
+
+model Payments {
+  id              Int            @id @default(autoincrement())
+  namePayer       String
+  lastNamePayer   String
+  identifyPayer   String
+  phonePayer      String
+  emailPayer      String
+  bankPayer       String
+  reference       String
+  pedidos         Pedidos[]
+  methodPaymentId Int
+  methodPayment   PaymentMethods @relation(fields: [methodPaymentId], references: [id])
 }
 
 model Moneda {
-  monId    Int      @id @default(autoincrement())
-  monNom   String
-  fechCrea DateTime @default(now())
-  status   Boolean  @default(true)
-
-  // Relaciones
-  Producto Producto[]
-  Venta    Venta[]
+  id       Int              @id @default(autoincrement())
+  currency String
+  symbol   String
+  Store    Store[]
+  Pago     PaymentMethods[]
 }
 
 model Unidad {
-  undId    Int      @id @default(autoincrement())
-  undNom   String
-  fechCrea DateTime @default(now())
-  status   Boolean  @default(true)
-
-  // Relaciones
-  Producto Producto[]
+  id    Int     @id @default(autoincrement())
+  unit  String
+  Store Store[]
 }

@@ -17,13 +17,11 @@ export class ProveedoresService {
         try {
             await this.prismaService.proveedor.create({
                 data: {
-                    empId: 1,
-                    provNom: proveedores.provNom,
-                    provRuc: proveedores.provRuc,
-                    provTelf: proveedores.provTelf,
-                    provDirecc: proveedores.provDirecc,
-                    provCorreo: proveedores.provCorreo,
-                    status: proveedores.status,
+                    name: proveedores.name,
+                    ruc: proveedores.ruc,
+                    phone: proveedores.phone,
+                    address: proveedores.address,
+                    email: proveedores.email,
                 }
             })
 
@@ -38,16 +36,14 @@ export class ProveedoresService {
         try {
             await this.prismaService.proveedor.update({
                 data: {
-                    empId: 1,
-                    provNom: proveedores.provNom,
-                    provRuc: proveedores.provRuc,
-                    provTelf: proveedores.provTelf,
-                    provDirecc: proveedores.provDirecc,
-                    provCorreo: proveedores.provCorreo,
-                    status: proveedores.status,
+                    name: proveedores.name,
+                    ruc: proveedores.ruc,
+                    phone: proveedores.phone,
+                    address: proveedores.address,
+                    email: proveedores.email,
                 },
                 where: {
-                    provId: proveedores.provId
+                    id: proveedores.id
                 }
             })
 
@@ -61,7 +57,7 @@ export class ProveedoresService {
     async deleteProveedores(id: number): Promise<DtoBaseResponse> {
         await this.prismaService.proveedor.delete({
             where: {
-                provId: id
+                id: id
             }
         })
         baseResponse.message = 'Proveedor eliminada.';

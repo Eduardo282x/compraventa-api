@@ -12,7 +12,7 @@ export class SucursalService {
     async getSucursales() {
         return await this.prismaService.sucursal.findMany({
             include: {
-                Empresa: true
+                empresa: true
             }
         });
     }
@@ -21,9 +21,8 @@ export class SucursalService {
         try {
             await this.prismaService.sucursal.create({
                 data: {
-                    sucNom: sucursal.sucNom,
-                    status: sucursal.status,
-                    empId: sucursal.empId
+                    companyId: sucursal.companyId,
+                    nombre: sucursal.nombre,
                 }
             })
 
@@ -38,9 +37,8 @@ export class SucursalService {
         try {
             await this.prismaService.sucursal.update({
                 data: {
-                    sucNom: sucursal.sucNom,
-                    status: sucursal.status,
-                    empId: sucursal.empId,
+                    companyId: sucursal.companyId,
+                    nombre: sucursal.nombre,
                 },
                 where: {
                     sucId: sucursal.sucId
@@ -55,12 +53,26 @@ export class SucursalService {
         }
     }
     async deleteSucursal(id: number): Promise<DtoBaseResponse> {
-        await this.prismaService.sucursal.delete({
-            where: {
-                sucId: id
+        try {
+            const findSucursal = await this.prismaService.producto.findFirst({
+                where: {sucursalId : id}
+            })
+
+            if(findSucursal){
+                badResponse.message = 'Hay productos registrados en esta sucursal.';
+                return badResponse;
             }
-        })
-        baseResponse.message = 'Sucursal eliminada.';
-        return baseResponse;
+            
+            await this.prismaService.sucursal.delete({
+                where: {
+                    sucId: id
+                }
+            })
+            baseResponse.message = 'Sucursal eliminada.';
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err;
+            return badResponse;
+        }
     }
 }

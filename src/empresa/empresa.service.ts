@@ -15,12 +15,11 @@ export class EmpresaService {
         try {
             await this.prismaService.empresa.create({
                 data: {
-                    empNom: empresa.empNom,
-                    empRuc: empresa.empRuc,
-                    empCorreo: empresa.empCorreo,
-                    empTelf: empresa.empTelf,
-                    empDirecc: empresa.empDirecc,
-                    status: empresa.status
+                    companyName: empresa.companyName,
+                    companyRuc: empresa.companyRuc,
+                    companyPhone: empresa.companyPhone,
+                    companyEmail: empresa.companyEmail,
+                    companyAddress: empresa.companyAddress,
                 }
             })
 
@@ -35,15 +34,14 @@ export class EmpresaService {
         try {
             await this.prismaService.empresa.update({
                 data: {
-                    empNom: empresa.empNom,
-                    empRuc: empresa.empRuc,
-                    empCorreo: empresa.empCorreo,
-                    empTelf: empresa.empTelf,
-                    empDirecc: empresa.empDirecc,
-                    status: empresa.status
+                    companyName: empresa.companyName,
+                    companyRuc: empresa.companyRuc,
+                    companyPhone: empresa.companyPhone,
+                    companyEmail: empresa.companyEmail,
+                    companyAddress: empresa.companyAddress,
                 },
                 where: {
-                    empId: empresa.id
+                    id: empresa.id
                 }
             })
 
@@ -57,7 +55,7 @@ export class EmpresaService {
     async deleteEmpresa(id: number): Promise<DtoBaseResponse> {
         await this.prismaService.empresa.delete({
             where: {
-                empId: id
+                id: id
             }
         })
         baseResponse.message = 'Empresa eliminada.';

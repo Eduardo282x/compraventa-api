@@ -1,69 +1,64 @@
 import { Transform } from "class-transformer";
-import { IsNumber, IsString, IsNotEmpty, IsOptional, IsDate, IsBoolean, IsDecimal } from "class-validator";
+import { IsNumber, IsString, IsDate, IsOptional, } from "class-validator";
 
-export class DtoCategorias {
-    @IsNumber()
-    sucId: number;
+export class DtoCategory {
     @IsString()
-    nombre: string;
+    category: string;
 }
 
-export class DtoUpdarteCategorias extends DtoCategorias {
+export class DtoUpdateCategories extends DtoCategory {
     @IsNumber()
-    catId: number;
+    id: number;
 }
 
 // ------------------------------------------------------
 
 export class CreateProductoDto {
-    @IsNotEmpty()
     @IsNumber()
-    catId: number;
-
-    @IsNotEmpty()
+    categoryId: number;
     @IsString()
-    prodNom: string;
-
-    @IsOptional()
+    name: string;
     @IsString()
-    prodDescrip?: string;
-
-    @IsNotEmpty()
+    description: string;
     @IsNumber()
-    prodPcompra: number;
-
-    @IsNotEmpty()
+    price: number;
     @IsNumber()
-    prodPventa: number;
-
+    amount: number;
+    @IsString()
     @IsOptional()
+    img: string;
     @IsNumber()
-    prodStock?: number;
+    providerId: number;
+    @IsNumber()
+    currencyId: number;
+    @IsNumber()
+    unitId: number;
+    @IsNumber()
+    unit: number;
 
-    @IsNotEmpty()
     @Transform(({ value }) => new Date(value))
     @IsDate()
-    prodFechaven: Date;
-
-    @IsOptional()
-    @IsString()
-    prodImg?: string;
-
-    @IsOptional()
-    @IsBoolean()
-    status?: boolean;
-
-    @IsOptional()
-    @IsNumber()
-    MonedaMonId?: number;
-
-    @IsOptional()
-    @IsNumber()
-    UnidadUndId?: number;
+    expirationDate: Date;
 }
 
 export class UpdateProductoDto extends CreateProductoDto {
-    @IsNotEmpty()
     @IsNumber()
-    prodId: number;
+    id: number;
+}
+
+
+export class DtoSaveProduct {
+    @IsNumber()
+    storeId: number;
+    @IsNumber()
+    sucursalId: number;
+    @IsNumber()
+    amount: number;
+}
+
+export class DtoIncreaseProductStore {
+    @IsNumber()
+    storeId: number;
+    @IsNumber()
+    amount: number;
 }

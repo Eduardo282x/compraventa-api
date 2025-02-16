@@ -2,22 +2,22 @@ import { IsNumber, IsString } from "class-validator";
 
 export class DtoClientes {
     @IsString()
-    cliNombre: string;
+    clientName: string;
     @IsString()
-    cliRif: string;
+    clientLastName: string;
     @IsString()
-    cliTelefono: string;
+    clientRif: string;
     @IsString()
-    cliDireccion: string;
+    clientPhone: string;
     @IsString()
-    cliCorreo: string;
+    clientAddress: string;
     @IsString()
-    cliApellido: string;
+    clientEmail: string;
     @IsString()
-    cliPassword: string;
+    clientPassword: string;
 }
 
-export class DtoUpdateCliente extends DtoClientes { 
+export class DtoUpdateCliente extends DtoClientes {
     @IsNumber()
     id: number;
 }
