@@ -9,9 +9,9 @@ export class PagoService {
 
     }
 
-    async getPays(){
+    async getPays() {
         return await this.prismaService.payments.findMany({
-            include: {methodPayment: true}
+            include: { methodPayment: true }
         });
     }
 

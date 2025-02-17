@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { badResponse, baseResponse, DtoBaseResponse } from 'src/dto/base.dto';
-import { DtoPedido } from 'src/dto/pedido.dto';
+import { DtoPedido, DtoUpdatePedido } from 'src/dto/pedido.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -69,6 +69,21 @@ export class PedidosService {
             return baseResponse;
         } catch (err) {
             badResponse.message = err;
+            return badResponse;
+        }
+    }
+
+    async updatePedido(pedido: DtoUpdatePedido): Promise<DtoBaseResponse> {
+        try {
+            await this.prismaService.pedidos.update({
+                data: { status: pedido.status },
+                where: { id: pedido.id }
+            })
+
+            baseResponse.message = 'Pedido actualizado.'
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err
             return badResponse;
         }
     }

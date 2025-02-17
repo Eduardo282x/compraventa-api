@@ -10,6 +10,15 @@ export class DtoPedido {
     payment: DtoPayment
 }
 
+export class DtoUpdatePedido {
+    @IsNumber()
+    id: number;
+    @IsString()
+    status: statusOrders;
+}
+
+type statusOrders = 'Creado' | 'Procesando' | 'Completado' | 'Denegado' | 'Eliminado';
+
 export class DtoPayment {
     @IsString()
     namePayer: string;
