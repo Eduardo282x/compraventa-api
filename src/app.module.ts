@@ -13,9 +13,10 @@ import { MainloadModule } from './mainload/mainload.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { CarritoModule } from './carrito/carrito.module';
+import { PedidosModule } from './pedidos/pedidos.module';
 
 @Module({
-  imports: [ProductoModule, PagoModule, SucursalModule, EmpresaModule, UsuariosModule, ClientesModule, ProveedoresModule, MainloadModule, AuthModule, CategoryModule, CarritoModule],
+  imports: [ProductoModule, PagoModule, SucursalModule, EmpresaModule, UsuariosModule, ClientesModule, ProveedoresModule, MainloadModule, AuthModule, CategoryModule, CarritoModule, PedidosModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

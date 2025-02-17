@@ -12,19 +12,36 @@ export class CarritoService {
     async getCarritoByClient(clientId: number) {
         return await this.prismaService.carrito.findMany({
             where: { clientId },
-            include: { producto: { include: { store: true } } }
+            include: { producto: { include: { store: { include: { category: true } } } } },
+            orderBy: {id: 'asc'}
         })
     }
 
     async addToCarrito(carrito: DtoCarrito) {
         try {
-            await this.prismaService.carrito.create({
-                data: {
-                    productId: carrito.productId,
-                    amount: carrito.amount,
-                    clientId: carrito.clientId
-                }
+            const findProductAndClient = await this.prismaService.carrito.findFirst({
+                where: { productId: carrito.productId, clientId: carrito.clientId }
             })
+
+            if (findProductAndClient) {
+                await this.prismaService.carrito.update({
+                    data: {
+                        amount: carrito.amount
+                    },
+                    where: {
+                        id: findProductAndClient.id
+                    }
+                })
+            } else {
+                await this.prismaService.carrito.create({
+                    data: {
+                        productId: carrito.productId,
+                        amount: carrito.amount,
+                        clientId: carrito.clientId
+                    }
+                })
+            }
+
             baseResponse.message = 'Producto agregado';
             return baseResponse;
         } catch (err) {
