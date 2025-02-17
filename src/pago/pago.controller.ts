@@ -9,6 +9,10 @@ export class PagoController {
     constructor(private pagoService: PagoService) {
     }
 
+    @Get('/pagos')
+    async getPays() {
+        return await this.pagoService.getPays()
+    }
     @Get()
     async getMethodsPayments() {
         return await this.pagoService.getMethodsPayments()

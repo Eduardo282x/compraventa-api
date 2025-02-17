@@ -9,6 +9,12 @@ export class PagoService {
 
     }
 
+    async getPays(){
+        return await this.prismaService.payments.findMany({
+            include: {methodPayment: true}
+        });
+    }
+
     async getMethodsPayments() {
         return await this.prismaService.paymentMethods.findMany();
     }
