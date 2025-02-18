@@ -1,23 +1,6 @@
 import { Type } from "class-transformer";
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString, ValidateNested } from "class-validator";
 
-export class DtoPedido {
-    @IsNumber()
-    clientId: number;
-    @IsNumber()
-    total: number;
-    @Type(() => DtoPayment)
-    payment: DtoPayment
-}
-
-export class DtoUpdatePedido {
-    @IsNumber()
-    id: number;
-    @IsString()
-    status: statusOrders;
-}
-
-type statusOrders = 'Creado' | 'Procesando' | 'Completado' | 'Denegado' | 'Eliminado';
 
 export class DtoPayment {
     @IsString()
@@ -37,3 +20,22 @@ export class DtoPayment {
     @IsNumber()
     methodPaymentId: number;
 }
+
+export class DtoPedido {
+    @IsNumber()
+    clientId: number;
+    @IsNumber()
+    total: number;
+    @ValidateNested()
+    @Type(() => DtoPayment)
+    payment: DtoPayment
+}
+
+export class DtoUpdatePedido {
+    @IsNumber()
+    id: number;
+    @IsString()
+    status: statusOrders;
+}
+
+type statusOrders = 'Creado' | 'Aprobado' | 'Denegado' | 'Eliminado';

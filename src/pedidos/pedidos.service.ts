@@ -10,11 +10,22 @@ export class PedidosService {
     }
 
     async getPedidos() {
-        return await this.prismaService.pedidos.findMany();
+        return await this.prismaService.pedidos.findMany({
+            include: {
+                cliente: true,
+                payment: true,
+                DetPedidos: { include: { producto: { include: { store: { include: { category: true } } } } } }
+            },
+            orderBy: {id: 'desc'}
+        });
     }
 
     async getPedidosByClient(clientId: number) {
-        return await this.prismaService.pedidos.findMany({ where: { clientId } });
+        return await this.prismaService.pedidos.findMany({
+            where: { clientId },
+            include: { DetPedidos: { include: { producto: { include: { store: { include: { category: true } } } } } } },
+            orderBy: {id: 'desc'}
+        });
     }
 
     async createPedido(pedido: DtoPedido): Promise<DtoBaseResponse> {
@@ -68,7 +79,7 @@ export class PedidosService {
             baseResponse.message = 'Pedido creado.'
             return baseResponse;
         } catch (err) {
-            badResponse.message = err;
+            badResponse.message = err.message;
             return badResponse;
         }
     }

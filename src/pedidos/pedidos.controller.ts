@@ -12,9 +12,9 @@ export class PedidosController {
     async getPedidos() {
         return await this.pedidosService.getPedidos();
     }
-    @Get('/:cliendId')
-    async getPedidosByClient(@Param('cliendId') cliendId: string) {
-        return await this.pedidosService.getPedidosByClient(Number(cliendId));
+    @Get('/:id')
+    async getPedidosByClient(@Param('id') id: string) {
+        return await this.pedidosService.getPedidosByClient(Number(id));
     }
     @Post()
     async createPedido(@Body() pedido: DtoPedido) {
