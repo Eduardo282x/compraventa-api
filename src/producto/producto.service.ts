@@ -17,13 +17,14 @@ export class ProductoService {
                 Moneda: true,
                 unidad: true
             },
+            orderBy: {id: 'desc'}
         });
     }
 
     async getProductsBySucursal(sucursalId: number) {
         return await this.prismaService.producto.findMany({
             include: {
-                store: { include: { category: true } },
+                store: { include: { category: true, Moneda: true }, },
                 sucursal: true,
             },
             where: {

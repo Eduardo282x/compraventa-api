@@ -74,6 +74,7 @@ export class CarritoService {
             await this.prismaService.carrito.delete({
                 where: { id }
             })
+            baseResponse.message = 'Producto eliminado del carrito.';
             return baseResponse;
         } catch (err) {
             return badResponse;
