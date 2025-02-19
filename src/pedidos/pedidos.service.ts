@@ -16,7 +16,7 @@ export class PedidosService {
                 payment: true,
                 DetPedidos: { include: { producto: { include: { store: { include: { category: true } } } } } }
             },
-            orderBy: {id: 'desc'}
+            orderBy: { id: 'desc' }
         });
     }
 
@@ -24,7 +24,7 @@ export class PedidosService {
         return await this.prismaService.pedidos.findMany({
             where: { clientId },
             include: { DetPedidos: { include: { producto: { include: { store: { include: { category: true } } } } } } },
-            orderBy: {id: 'desc'}
+            orderBy: { id: 'desc' }
         });
     }
 
@@ -70,11 +70,6 @@ export class PedidosService {
                         productId: carrito.productId
                     }
                 })
-
-                await this.prismaService.producto.update({
-                    data: {amount: findProduct.amount - carrito.amount},
-                    where: {id: findProduct.id}
-                })
             })
 
             await this.prismaService.carrito.deleteMany({
@@ -91,10 +86,29 @@ export class PedidosService {
 
     async updatePedido(pedido: DtoUpdatePedido): Promise<DtoBaseResponse> {
         try {
-            await this.prismaService.pedidos.update({
+            const findPedido = await this.prismaService.pedidos.update({
                 data: { status: pedido.status },
                 where: { id: pedido.id }
             })
+
+            if (pedido.status === 'Aprobado') {
+                const findDetPedido = await this.prismaService.detPedidos.findMany({
+                    where: { orderId: findPedido.id }
+                });
+
+                if (findDetPedido) {
+                    findDetPedido.map(async (pe) => {
+                        const findProducto = await this.prismaService.producto.findFirst({
+                            where: { id: pe.productId }
+                        })
+
+                        await this.prismaService.producto.update({
+                            data: { amount: findProducto.amount - pe.amount },
+                            where: { id: findProducto.id }
+                        })
+                    })
+                }
+            }
 
             baseResponse.message = 'Pedido actualizado.'
             return baseResponse;

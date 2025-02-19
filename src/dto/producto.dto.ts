@@ -14,27 +14,27 @@ export class DtoUpdateCategories extends DtoCategory {
 // ------------------------------------------------------
 
 export class CreateProductoDto {
-    @IsNumber()
-    categoryId: number;
+    @IsString()
+    categoryId: string;
     @IsString()
     name: string;
     @IsString()
     description: string;
-    @IsNumber()
-    price: number;
-    @IsNumber()
-    amount: number;
+    @IsString()
+    price: string;
+    @IsString()
+    amount: string;
     @IsString()
     @IsOptional()
     img: string;
-    @IsNumber()
-    providerId: number;
-    @IsNumber()
-    currencyId: number;
-    @IsNumber()
-    unitId: number;
-    @IsNumber()
-    unit: number;
+    @IsString()
+    providerId: string;
+    @IsString()
+    currencyId: string;
+    @IsString()
+    unitId: string;
+    @IsString()
+    unit: string;
 
     @Transform(({ value }) => new Date(value))
     @IsDate()
@@ -42,8 +42,8 @@ export class CreateProductoDto {
 }
 
 export class UpdateProductoDto extends CreateProductoDto {
-    @IsNumber()
-    id: number;
+    @IsString()
+    id: string;
 }
 
 

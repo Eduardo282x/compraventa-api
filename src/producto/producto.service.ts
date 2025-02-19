@@ -76,20 +76,20 @@ export class ProductoService {
         }
     }
 
-    async createProducto(product: CreateProductoDto): Promise<DtoBaseResponse> {
+    async createProducto(product: CreateProductoDto, filePath: string): Promise<DtoBaseResponse> {
         try {
             await this.prismaService.store.create({
                 data: {
-                    categoryId: product.categoryId,
+                    categoryId: Number(product.categoryId),
                     name: product.name,
                     description: product.description,
                     price: product.price,
-                    amount: product.amount,
+                    amount: Number(product.amount),
                     expirationDate: product.expirationDate,
-                    img: product.img,
-                    providerId: product.providerId,
-                    currencyId: product.currencyId,
-                    unitId: product.unitId,
+                    img: filePath,
+                    providerId: Number(product.providerId),
+                    currencyId: Number(product.currencyId),
+                    unitId: Number(product.unitId),
                     unit: product.unit.toString(),
                 }
             })
@@ -173,24 +173,24 @@ export class ProductoService {
         }
     }
 
-    async updateProducto(product: UpdateProductoDto): Promise<DtoBaseResponse> {
+    async updateProducto(product: UpdateProductoDto, filePath: string): Promise<DtoBaseResponse> {
         try {
             await this.prismaService.store.update({
                 data: {
-                    categoryId: product.categoryId,
+                    categoryId: Number(product.categoryId),
                     name: product.name,
                     description: product.description,
                     price: product.price,
-                    amount: product.amount,
+                    amount: Number(product.amount),
                     expirationDate: product.expirationDate,
-                    img: product.img,
-                    providerId: product.providerId,
-                    currencyId: product.currencyId,
-                    unitId: product.unitId,
+                    img: filePath,
+                    providerId: Number(product.providerId),
+                    currencyId: Number(product.currencyId),
+                    unitId: Number(product.unitId),
                     unit: product.unit.toString(),
                 },
                 where: {
-                    id: product.id
+                    id: Number(product.id)
                 }
             })
 

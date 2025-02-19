@@ -13,6 +13,10 @@ export class ClientesController {
     async getClientes() {
         return await this.clienteService.getClientes()
     }
+    @Get('/:id')
+    async getClienteById(@Param('id') id: string) {
+        return await this.clienteService.getClienteById(Number(id))
+    }
     @Post()
     async createCliente(@Body() cliente: DtoClientes): Promise<DtoBaseResponse> {
         return await this.clienteService.createCliente(cliente);

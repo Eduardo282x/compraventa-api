@@ -12,6 +12,11 @@ export class ClientesService {
     async getClientes() {
         return await this.prismaService.cliente.findMany();
     }
+    async getClienteById(id: number) {
+        return await this.prismaService.cliente.findFirst({
+            where: {id}
+        });
+    }
     async createCliente(cliente: DtoClientes): Promise<DtoBaseResponse> {
         try {
             await this.prismaService.cliente.create({
