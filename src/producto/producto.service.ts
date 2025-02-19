@@ -66,7 +66,7 @@ export class ProductoService {
                 where: {
                     store: {
                         name: {
-                            contains: product,
+                            contains: product ? product : '',
                             mode: 'insensitive',
                         }
                     },
