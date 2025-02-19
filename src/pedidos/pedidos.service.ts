@@ -70,6 +70,11 @@ export class PedidosService {
                         productId: carrito.productId
                     }
                 })
+
+                await this.prismaService.producto.update({
+                    data: {amount: findProduct.amount - carrito.amount},
+                    where: {id: findProduct.id}
+                })
             })
 
             await this.prismaService.carrito.deleteMany({
