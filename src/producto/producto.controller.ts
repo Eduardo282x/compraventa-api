@@ -74,12 +74,7 @@ export class ProductoController {
         @Body() producto: CreateProductoDto,
         @UploadedFile() file?: Express.Multer.File,  // 👈 Opcional para evitar errores
     ): Promise<DtoBaseResponse> {
-        if (!file) {
-            badResponse.message = 'No se encontro el archivo'
-            return badResponse;
-        }
-
-        return await this.productoServices.createProducto(producto, file.filename);
+        return await this.productoServices.createProducto(producto, file ? file.filename : '');
     }
 
     @Put()
@@ -99,12 +94,7 @@ export class ProductoController {
         @Body() producto: UpdateProductoDto,
         @UploadedFile() file?: Express.Multer.File,  // 👈 Opcional para evitar errores
     ): Promise<DtoBaseResponse> {
-        if (!file) {
-            badResponse.message = 'No se encontro el archivo'
-            return badResponse;
-        }
-
-        return await this.productoServices.updateProducto(producto, file.filename);
+        return await this.productoServices.updateProducto(producto, file ? file.filename : '');
     }
 
 

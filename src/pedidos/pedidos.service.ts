@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { badResponse, baseResponse, DtoBaseResponse } from 'src/dto/base.dto';
 import { DtoPedido, DtoUpdatePedido } from 'src/dto/pedido.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as PDFDocument from 'pdfkit';
+import { Response } from 'express';
 
 @Injectable()
 export class PedidosService {
@@ -116,5 +118,64 @@ export class PedidosService {
             badResponse.message = err
             return badResponse;
         }
+    }
+
+    async generarFactura(pedidoId: number, res: Response) {
+        const pedido = await this.prismaService.pedidos.findUnique({
+            where: { id: pedidoId },
+            include: {
+                cliente: true,
+                DetPedidos: {
+                    include: {
+                        producto: {
+                            include: {
+                                store: { include: { category: true } }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const cliente = pedido.cliente;
+        const detalles = pedido.DetPedidos;
+
+        const filePath = `./facturas/factura_${pedido.id}.pdf`;
+        const doc = new PDFDocument({ margin: 30 });
+        res.setHeader('Content-Disposition', `attachment; filename=factura.pdf`);
+        res.setHeader('Content-Type', 'application/pdf');
+
+        doc.pipe(res);
+
+        // 🏪 Encabezado de la factura
+        doc.fontSize(20).text('Factura de Compra', { align: 'center' }).moveDown();
+        doc.fontSize(12).text(`Factura N°: ${(pedido.id).toString().padStart(7, '0')}`);
+        doc.text(`Fecha: ${new Date(pedido.createDate).toLocaleDateString()}`).moveDown();
+
+        // 👤 Datos del cliente
+        doc.fontSize(14).text('Datos del Cliente:', { underline: true }).moveDown();
+        doc.fontSize(12).text(`Nombre: ${cliente.clientName} ${cliente.clientLastName}`);
+        doc.text(`Email: ${cliente.clientEmail}`);
+        doc.text(`Cédula: ${cliente.clientRif}`);
+        doc.text(`Teléfono: ${cliente.clientPhone}`);
+        doc.text(`Dirección: ${cliente.clientAddress}`);
+        doc.moveDown();
+
+        // 🛒 Detalles del pedido
+        doc.fontSize(14).text('Detalle del Pedido:', { underline: true }).moveDown();
+        
+        detalles.forEach((detalle, index) => {
+            doc.fontSize(12).text(
+                `${index + 1}.${detalle.producto.store.name} (${detalle.producto.store.category.category})`
+            );
+            doc.text(`Cantidad: ${detalle.amount}`);
+            doc.text(`Precio: $${detalle.total}`);
+            doc.moveDown();
+        });
+
+        // 💵 Total del pedido
+        doc.fontSize(14).text(`Total: $${pedido.total.toFixed(2)}`, { align: 'right' }).moveDown();
+
+        doc.end();
     }
 }
