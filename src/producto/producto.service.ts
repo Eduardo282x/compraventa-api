@@ -51,7 +51,7 @@ export class ProductoService {
         if (findCategory) {
             return await this.prismaService.producto.findMany({
                 include: {
-                    store: { include: { category: true } },
+                    store: { include: { category: true, Moneda: true }},
                 },
                 where: {
                     store: { categoryId: findCategory.id },
@@ -61,7 +61,7 @@ export class ProductoService {
         } else {
             return await this.prismaService.producto.findMany({
                 include: {
-                    store: { include: { category: true } },
+                    store: { include: { category: true, Moneda: true } },
                 },
                 where: {
                     store: {
