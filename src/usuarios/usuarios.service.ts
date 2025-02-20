@@ -30,6 +30,7 @@ export class UsuariosService {
                     name: usuario.name,
                     lastName: usuario.lastName,
                     email: usuario.email,
+                    identify: usuario.identify,
                     password: usuario.password,
                     status: usuario.status,
                 }
@@ -51,6 +52,7 @@ export class UsuariosService {
                     name: usuario.name,
                     lastName: usuario.lastName,
                     email: usuario.email,
+                    identify: usuario.identify,
                     password: usuario.password,
                     status: usuario.status,
                 },

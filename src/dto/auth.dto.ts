@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 import { DtoBaseResponse } from "./base.dto";
 
 export class DtoLogin {
@@ -22,6 +22,22 @@ export class ResponseLogin extends DtoBaseResponse {
 export class DtoLoginClient {
     @IsString()
     email: string;
+    @IsString()
+    password: string;
+}
+
+export class DtoPassword {
+    @IsNumber()
+    id: number;
+    @IsString()
+    password: string;
+}
+
+export class DtoReturnPassword {
+    @IsString()
+    email: string;
+    @IsString()
+    identify: string;
     @IsString()
     password: string;
 }

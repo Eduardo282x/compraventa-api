@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DtoLogin, DtoLoginClient, ResponseLogin } from 'src/dto/auth.dto';
+import { DtoLogin, DtoLoginClient, DtoPassword, DtoReturnPassword, ResponseLogin } from 'src/dto/auth.dto';
 import { badResponse, baseResponse, DtoBaseResponse } from 'src/dto/base.dto';
 import { DtoClientes } from 'src/dto/clients.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -81,7 +81,7 @@ export class AuthService {
             }
         }
 
-        if(!findUser.status){
+        if (!findUser.status) {
             badResponse.message = 'Este usuario esta inactivo.';
             return badResponse;
         }
@@ -94,5 +94,91 @@ export class AuthService {
         }
 
         return response;
+    }
+
+    async updatePassword(bodyPassword: DtoPassword) {
+        try {
+            await this.prismaService.usuario.update({
+                data: { password: bodyPassword.password },
+                where: { id: bodyPassword.id }
+            })
+
+            baseResponse.message = 'Contraseña actualizada exitosamente.'
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err.message;
+            return badResponse;
+        }
+    }
+
+    async updatePasswordClient(bodyPassword: DtoPassword) {
+        try {
+            await this.prismaService.cliente.update({
+                data: { clientPassword: bodyPassword.password },
+                where: { id: bodyPassword.id }
+            })
+
+            baseResponse.message = 'Contraseña actualizada exitosamente.'
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err.message;
+            return badResponse;
+        }
+    }
+
+    async returnPasswordClient(newPassword: DtoReturnPassword) {
+        console.log(newPassword);
+        
+        try {
+            const findClient = await this.prismaService.cliente.findFirst({
+                where: {
+                    clientEmail: newPassword.email,
+                    clientRif: newPassword.identify
+                }
+            })
+
+            if (!findClient) {
+                badResponse.message = 'Cliente no encontrado.';
+                return badResponse;
+            }
+
+            await this.prismaService.cliente.update({
+                data: { clientPassword: newPassword.password },
+                where: { id: findClient.id }
+            })
+
+            baseResponse.message = 'Contraseña actualizada exitosamente.'
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err.message;
+            return badResponse;
+        }
+    }
+
+    async returnPassword(newPassword: DtoReturnPassword) {
+        try {
+            const findUser = await this.prismaService.usuario.findFirst({
+                where: {
+                    email: newPassword.email,
+                    identify: newPassword.identify
+                }
+            })
+
+            if (!findUser) {
+                badResponse.message = 'Usuario no encontrado.';
+                return badResponse;
+            }
+
+            await this.prismaService.usuario.update({
+                data: { password: newPassword.password },
+                where: { id: findUser.id }
+            })
+
+            baseResponse.message = 'Contraseña actualizada exitosamente.'
+            return baseResponse;
+        } catch (err) {
+            badResponse.message = err.message;
+            return badResponse;
+        }
     }
 }

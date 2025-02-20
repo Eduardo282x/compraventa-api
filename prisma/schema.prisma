@@ -40,6 +40,7 @@ model Usuario {
   name     String
   lastName String
   email    String
+  identify String
   password String
   status   Boolean  @default(true)
   sucursal Sucursal @relation(fields: [sucId], references: [sucId])

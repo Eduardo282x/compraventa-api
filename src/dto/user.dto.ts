@@ -12,6 +12,8 @@ export class DtoUsuario {
     @IsString()
     email: string;
     @IsString()
+    identify: string;
+    @IsString()
     password: string;
     @IsBoolean()
     status: boolean;

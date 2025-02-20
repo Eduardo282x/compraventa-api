@@ -55,6 +55,7 @@ export class MainloadService {
                 rolId: 1,
                 name: 'admin',
                 lastName: 'admin',
+                identify: '12345678',
                 email: 'admin@gmail.com',
                 password: 'admin',
             }
